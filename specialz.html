@@ -176,7 +176,7 @@
     lyricsData.forEach((item, index) => {
       const div = document.createElement('div');
       div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
-      div.innerText = item.text;
+      div.innerHTML = item.text;
       div.id = `lyric-${index}`;
       
       div.addEventListener('click', () => {
