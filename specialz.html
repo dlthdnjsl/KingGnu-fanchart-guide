@@ -109,7 +109,17 @@
       cursor: pointer;
     }
 
-    /* 일반 가사 하이라이트 (흰색) */
+    /* 1. 기본 아랫줄(발음/해석) 스타일 - 평소에는 어두운 회색 & 작은 글씨 */
+    .sub-lyric {
+      font-size: 0.8rem !important;
+      color: #8a8a98;
+      font-weight: 400 !important;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
+
+    /* 2. 일반 가사 재생 중(active)일 때 -> 윗줄 흰색 강조 */
     .lyric-line.active {
       color: var(--text-active);
       font-weight: 700;
@@ -117,23 +127,19 @@
       background-color: rgba(255, 255, 255, 0.08);
     }
 
-  /* 떼창 가사 기본 스타일 (일본어 원문) */
+    /* 3. 떼창 가사 평소 상태 -> 윗줄/아랫줄 모두 분홍/붉은 톤 */
     .lyric-line.chant {
       color: #ff6b81;
     }
-
-    /* 떼창 가사 발음 및 해석 (평소에도 살짝 밝은 붉은 회색) */
     .lyric-line.chant .sub-lyric {
       color: #ffa8b2 !important;
     }
 
-    /* [핵심] 떼창 파트 재생 중(active)일 때 -> 3줄 전체가 강렬하게 붉은색 하이라이트! */
+    /* 4. [핵심] 떼창 가사 재생 중(active)일 때 -> 3줄 전체 선명한 빨간색 하이라이트 */
     .lyric-line.active.chant {
       color: #ff4757 !important;
       text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
     }
-
-    /* 떼창 파트 재생 중(active)일 때의 아랫줄 발음 및 해석 */
     .lyric-line.active.chant .sub-lyric {
       color: #ff7081 !important;
       font-weight: 600 !important;
@@ -180,7 +186,7 @@
       { time: 70.0, text: "眩暈がする程<br><span class='sub-lyric'>메마이가 스루호도<br>현기증이 날 정도로</span>", isChant: false },
       { time: 72.0, text: "U R MY SPECIAL", isChant: true },
       { time: 74.0, text: "有耶無耶な儘廻る世界<br><span class='sub-lyric'>우야무야나 마마 마와루 세카이<br>유야무야 돌아가는 세상</span>", isChant: false },
-      { time: 78.0, text: "No, no, no!", isChant: false },
+      { time: 78.0, text: "No, no, no!", isChant: true },
       { time: 79.3, text: "そう冷静にはならないで<br><span class='sub-lyric'>소오 레이세이니와 나라나이데<br>그렇게 냉정해지진 말아줘</span>", isChant: false },
       { time: 82.0, text: "一生迷宮廻遊ランデブー<br><span class='sub-lyric'>잇쇼 메이큐 카이유 랑데부<br>평생 미궁속을 돌며 즐기는 랑데부</span>", isChant: false },
       { time: 86.5, text: "誰が如何言おうと<br><span class='sub-lyric'>다레가 도오 이오토<br>누가 뭐라고 하든</span>", isChant: false },
@@ -199,7 +205,7 @@
       { time: 127.8, text: "生き様を悔いるなんて<br><span class='sub-lyric'>이키자마오 쿠이루난테<br>살아온 삶을 후회한다니</span>", isChant: false },
       { time: 131.0, text: "そんなの御免だわ<br><span class='sub-lyric'>손나노 고멘다와<br>그런 건 사양할게</span>", isChant: false },
       { time: 134.7, text: "応答してよ 其体温感じたいの<br><span class='sub-lyric'>오토시테요 소노 타이온 칸지타이노<br>그 체온을 느끼고 싶으니까 대답해줘</span>", isChant: false },
-      { time: 137.8, text: "低体温のフローが点けた青い炎<br><span class='sub-lyric'>테타이온노 후로가 츠케타 아오 호노<br>저체온의 흐름이 붙인 파란 불꽃</span>", isChant: false },
+      { time: 137.8, text: "低体温のフローが点けた青い炎<br><span class='sub-lyric'>테타이オン노 후로가 츠케타 아오 호노<br>저체온의 흐름이 붙인 파란 불꽃</span>", isChant: false },
       { time: 142.0, text: "ロマンティックに誤魔化さないで<br><span class='sub-lyric'>로만틱크니 고마카사나이데<br>로맨틱하게 얼버무리지 말라고</span>", isChant: false },
       { time: 144.0, text: "単刀直入に切り裂いて<br><span class='sub-lyric'>탄토쵸쿠뉴니 키리사이테<br>단도직입적으로 갈라버려</span>", isChant: false },
       { time: 146.5, text: "熱っぽいラブソングには酔えないよもう<br><span class='sub-lyric'>네츳포이 라브송구니와 요이나이요 모오<br>열정적인 러브송에는 더 이상 취하지 않아</span>", isChant: false },
@@ -212,13 +218,13 @@
       { time: 181.0, text: "U R MY SPECIAL", isChant: true },
       { time: 182.8, text: "無茶苦茶にしてくれないかい？<br><span class='sub-lyric'>무챠쿠챠니 시테쿠레나이카이<br>엉망진창으로 만들어주지 않을래?</span>", isChant: false },
       { time: 187.0, text: "未来を存分に喰らい尽くして<br><span class='sub-lyric'>미라이오 존분니 쿠라이츠쿠시테<br>미래를 마음껏 먹어치우고</span>", isChant: false },
-      { time: 191.0, text: "一生迷宮廻遊ランデブー<br><span class='sub-lyric'>잇쇼 메이큐 카이유 랑데부<br>평생 미궁속을 돌며 즐기는 랑데부</span>", isChant: false },
+      { time: 191.0, text: "一生迷宮廻遊ランデブー<br><span class='sub-lyric'>잇쇼 메이큐 카이유 랑데부<br>평生 미궁속을 돌며 즐기는 랑데부</span>", isChant: false },
       { time: 195.0, text: "眩暈がする程<br><span class='sub-lyric'>메마이가 스루호도<br>현기증이 날 정도로</span>", isChant: false },
       { time: 197.0, text: "U R MY SPECIAL", isChant: true },
       { time: 199.0, text: "有耶無耶な儘廻る世界<br><span class='sub-lyric'>우야무야나 마마 마와루 세카이<br>유야무야 돌아가는 세상</span>", isChant: false },
       { time: 203.5, text: "No, no, no!", isChant: true },
       { time: 204.7, text: "そう冷静にはならないで<br><span class='sub-lyric'>소오 레이세이니와 나라나이데<br>그렇게 냉정해지진 말아줘</span>", isChant: false },
-      { time: 207.3, text: "一生迷宮廻遊ランデブー<br><span class='sub-lyric'>잇쇼 메이큐 카이유 랑데부<br>평생 미궁속을 돌며 즐기는 랑데부</span>", isChant: false },
+      { time: 207.3, text: "一生迷宮廻遊ランデブー<br><span class='sub-lyric'>잇쇼 메이큐 카이유 랑데부<br>평生 미궁속을 돌며 즐기는 랑데부</span>", isChant: false },
       { time: 212.7, text: "誰が如何言おうと<br><span class='sub-lyric'>다레가 도오 이오토<br>누가 뭐라 하든</span>", isChant: false },
       { time: 224.8, text: "U R MY SPECIAL", isChant: true },
       { time: 225.9, text: "WE R SPECIAL", isChant: true },
