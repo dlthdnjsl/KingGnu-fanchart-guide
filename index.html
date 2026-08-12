@@ -3,188 +3,218 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>King Gnu - 떼창 싱크 가이드</title>
+  <title>King Gnu Live Chant Guide</title>
   <style>
     :root {
-      --bg-color: #121212;
-      --card-bg: #1e1e1e;
-      --text-muted: #777777;
-      --text-active: #ffffff;
-      --chant-color: #ff4757;
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --card-hover: #23232a;
+      --accent-color: #ff4757;
+      --text-main: #ffffff;
+      --text-sub: #a0a0ab;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Pretendard', -apple-system, sans-serif;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
       background-color: var(--bg-color);
-      color: #fff;
-      margin: 0;
-      padding: 20px;
+      color: var(--text-main);
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
     }
 
-    h1 { font-size: 1.4rem; margin-bottom: 20px; }
+    /* 헤더 영역 */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
-    /* 유튜브 플레이어 박스 */
-    .player-wrapper {
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    header h1 span {
+      color: var(--accent-color);
+    }
+
+    header p {
+      color: var(--text-sub);
+      font-size: 0.95rem;
+    }
+
+    /* 검색창 */
+    .search-box {
       width: 100%;
-      max-width: 560px;
-      aspect-ratio: 16 / 9;
-      margin-bottom: 20px;
+      max-width: 600px;
+      margin-bottom: 30px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 20px;
       border-radius: 12px;
-      overflow: hidden;
-    }
-
-    #player { width: 100%; height: 100%; }
-
-    /* 가사 스크롤 영역 */
-    .lyrics-wrapper {
-      width: 100%;
-      max-width: 560px;
-      height: 320px;
+      border: 1px solid var(--border-color);
       background-color: var(--card-bg);
-      border-radius: 12px;
-      padding: 20px;
-      box-sizing: border-box;
-      overflow-y: auto;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
     }
 
-    .lyric-line {
-      padding: 12px;
-      margin: 6px 0;
-      border-radius: 8px;
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      transition: all 0.25s ease;
-      cursor: pointer;
+    .search-box input:focus {
+      border-color: var(--accent-color);
     }
 
-    /* 현재 재생 중인 가사 */
-    .lyric-line.active {
-      color: var(--text-active);
-      font-weight: bold;
-      font-size: 1.2rem;
-      background-color: rgba(255, 255, 255, 0.08);
+    /* 곡 리스트 그리드 */
+    .song-grid {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    /* 떼창 파트 스타일 */
-    .lyric-line.chant { color: #ff6b81; }
-    .lyric-line.active.chant {
-      color: var(--chant-color);
-      text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+    /* 곡 카드 */
+    .song-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 18px 22px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .song-card:hover {
+      background-color: var(--card-hover);
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+
+    .song-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .song-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .song-album {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+    }
+
+    .badge-chant {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent-color);
+      background-color: rgba(255, 71, 87, 0.12);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 71, 87, 0.3);
+    }
+
+    /* 푸터 */
+    footer {
+      margin-top: auto;
+      padding-top: 40px;
+      color: var(--text-sub);
+      font-size: 0.8rem;
     }
   </style>
 </head>
 <body>
 
-  <h1>King Gnu - SPECIALZ (떼창 가이드)</h1>
+  <header>
+    <h1>King Gnu <span>Chant Guide</span></h1>
+    <p>라이브 떼창 파트 싱크 가이드</p>
+  </header>
 
-  <div class="player-wrapper">
-    <div id="player"></div>
+  <!-- 곡 검색 기능 -->
+  <div class="search-box">
+    <input type="text" id="searchInput" onkeyup="filterSongs()" placeholder="곡 제목 검색...">
   </div>
 
-  <div class="lyrics-wrapper" id="lyricsContainer"></div>
+  <!-- 곡 목록 -->
+  <div class="song-grid" id="songList">
+    
+    <!-- 곡 1 -->
+    <a href="specialz.html" class="song-card">
+      <div class="song-info">
+        <div class="song-title">SPECIALZ</div>
+        <div class="song-album">주술회전 2기 OP</div>
+      </div>
+      <span class="badge-chant">떼창가이드</span>
+    </a>
+
+    <!-- 곡 2 -->
+    <a href="chameleon.html" class="song-card">
+      <div class="song-info">
+        <div class="song-title">カメレオン (카멜레온)</div>
+        <div class="song-album">미스터리라 하지 말찌어다 OST</div>
+      </div>
+      <span class="badge-chant">떼창가이드</span>
+    </a>
+
+    <!-- 곡 3 -->
+    <a href="hakujitsu.html" class="song-card">
+      <div class="song-info">
+        <div class="song-title">白日 (백일)</div>
+        <div class="song-album">CEREMONY</div>
+      </div>
+      <span class="badge-chant">떼창가이드</span>
+    </a>
+
+    <!-- 곡 4 -->
+    <a href="stardom.html" class="song-card">
+      <div class="song-info">
+        <div class="song-title">Stardom</div>
+        <div class="song-album">2022 NHK 축구 테마송</div>
+      </div>
+      <span class="badge-chant">떼창가이드</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>King Gnu Fan Chant Guide</p>
+  </footer>
 
   <script>
-    // 1. 가사 및 싱크 데이터 (초 단위 시간, 가사, 떼창 여부)
-    const lyricsData = [
-      { time: 0, text: "🎵 (반주 구간)", isChant: false },
-      { time: 10.5, text: "You are my special", isChant: false },
-      { time: 13.0, text: "今際の際で踊りましょ (마지막 순간에 춤춥시다)", isChant: true },
-      { time: 18.2, text: "東京前線狂乱騒ぎ (도쿄 전선 광란의 소동)", isChant: false },
-      { time: 22.0, text: "Get crazy for me!!", isChant: true },
-      { time: 25.5, text: "今宵、宴の華を添えましょう (오늘 밤 연회의 꽃을 더해봅시다)", isChant: false }
-    ];
+    // 검색 필터링 함수
+    function filterSongs() {
+      const input = document.getElementById('searchInput');
+      const filter = input.value.toLowerCase();
+      const songList = document.getElementById('songList');
+      const cards = songList.getElementsByClassName('song-card');
 
-    let player;
-    let timerInterval = null;
-    let currentIndex = -1;
-
-    // 2. 가사 HTML 요소를 화면에 생성
-    const container = document.getElementById('lyricsContainer');
-    lyricsData.forEach((item, index) => {
-      const div = document.createElement('div');
-      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
-      div.innerText = item.text;
-      div.id = `lyric-${index}`;
-      
-      // 가사를 클릭하면 해당 시간대로 영상 이동하는 편의 기능
-      div.addEventListener('click', () => {
-        if (player && player.seekTo) {
-          player.seekTo(item.time, true);
-          player.playVideo();
-        }
-      });
-      
-      container.appendChild(div);
-    });
-
-    // 3. YouTube Iframe API 불러오기
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    document.head.appendChild(tag);
-
-    // API 로드 완료 시 플레이어 생성
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-        videoId: 'f_Rky9q2VvM', // 사용하실 유튜브 영상 ID
-        playerVars: { 'rel': 0, 'modestbranding': 1 },
-        events: { 'onStateChange': onPlayerStateChange }
-      });
-    }
-
-    // 4. 영상 재생 상태 변화 감지
-    function onPlayerStateChange(event) {
-      if (event.data === YT.PlayerState.PLAYING) {
-        // 영상 재생 중일 때 0.1초마다 재생 시간 체크
-        if (!timerInterval) {
-          timerInterval = setInterval(updateLyrics, 100);
-        }
-      } else {
-        // 일시정지나 영상 종료 시 감지 중단
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-    }
-
-    // 5. 현재 재생 시간에 맞춰 가사 하이라이트 및 스크롤 처리
-    function updateLyrics() {
-      if (!player || !player.getCurrentTime) return;
-      
-      const currentTime = player.getCurrentTime();
-
-      // 현재 재생 구간에 맞는 가사 인덱스 찾기
-      let activeIndex = -1;
-      for (let i = 0; i < lyricsData.length; i++) {
-        if (currentTime >= lyricsData[i].time) {
-          activeIndex = i;
+      for (let i = 0; i < cards.length; i++) {
+        const title = cards[i].querySelector('.song-title').innerText;
+        const album = cards[i].querySelector('.song-album').innerText;
+        
+        if (title.toLowerCase().includes(filter) || album.toLowerCase().includes(filter)) {
+          cards[i].style.display = "flex";
         } else {
-          break;
+          cards[i].style.display = "none";
         }
-      }
-
-      // 구간이 변경되었을 때만 화면 갱신
-      if (activeIndex !== currentIndex) {
-        // 이전 하이라이트 해제
-        if (currentIndex !== -1) {
-          const prevEl = document.getElementById(`lyric-${currentIndex}`);
-          if (prevEl) prevEl.classList.remove('active');
-        }
-
-        // 새 가사 하이라이트 및 스크롤 이동
-        if (activeIndex !== -1) {
-          const currentEl = document.getElementById(`lyric-${activeIndex}`);
-          if (currentEl) {
-            currentEl.classList.add('active');
-            currentEl.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center'
-            });
-          }
-        }
-
-        currentIndex = activeIndex;
       }
     }
   </script>
