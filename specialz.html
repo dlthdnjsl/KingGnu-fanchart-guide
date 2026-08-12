@@ -128,12 +128,19 @@
     }
 
     /* 발음 및 해석 가사 크기 축소 */
-    .sub-lyric {
-      font-size: 0.8rem !important;   /* 글자 크기를 확 줄임 */
-      color: #8a8a98 !important;      /* 살짝 흐린 어두운 색상 */
-      font-weight: 400 !important;    /* 하이라이트 시에도 굵어지지 않음 */
-      display: block;
-      margin-top: 3px;
+   /* 발음 및 해석 가사 스타일 */
+.sub-lyric {
+  font-size: 0.8rem !important;
+  color: #8a8a98; /* 기본 상태에서는 어두운 회색 */
+  font-weight: 400 !important;
+  display: block;
+  margin-top: 3px;
+  transition: color 0.2s;
+}
+
+/* 떼창 파트가 활성화(active)될 때 아래 발음/해석까지 빨간색 계열로 강조 */
+.lyric-line.active.chant .sub-lyric {
+  color: #ff8592 !important; /* 떼창 하이라이트 시 아래 2줄도 붉은 톤으로 같이 밝아짐 */
     }
   </style>
 </head>
@@ -182,9 +189,9 @@
   { time: 62.0, text: "一切を存分に喰らい尽くして<br><span class='sub-lyric'>잇사이오 존분니 쿠라이 츠쿠시테<br>모든 걸 마음껏 먹어치우고</span>", isChant: false },
   { time: 66.8, text: "一生迷宮廻遊ランデブー<br><span class='sub-lyric'>잇쇼 메이큐 카이유 랑데부<br>평생 미궁속을 돌며 즐기는 랑데부</span>", isChant: false },
   { time: 70.0, text: "眩暈がする程<br><span class='sub-lyric'>메마이가 스루호도<br>현기증이 날 정도로</span>", isChant: false },
-  { time: 72.0, text: "U R MY SPECIAL", isChant: false },
+  { time: 72.0, text: "U R MY SPECIAL", isChant: true },
   { time: 74.0, text: "有耶無耶な儘廻る世界<br><span class='sub-lyric'>우야무야나 마마 마와루 세카이<br>유야무야 돌아가는 세상</span>", isChant: false },
-  { time: 78.0, text: "No, no, no!", isChant: true },
+  { time: 78.0, text: "No, no, no!", isChant: false },
   { time: 79.3, text: "そう冷静にはならないで<br><span class='sub-lyric'>소오 레이세이니와 나라나이데<br>그렇게 냉정해지진 말아줘</span>", isChant: false },
   { time: 82.0, text: "一生迷宮廻遊ランデブー<br><span class='sub-lyric'>잇쇼 메이큐 카이유 랑데부<br>평생 미궁속을 돌며 즐기는 랑데부</span>", isChant: false },
   { time: 86.5, text: "誰が如何言おうと<br><span class='sub-lyric'>다레가 도오 이오토<br>누가 뭐라고 하든</span>", isChant: false },
@@ -195,7 +202,7 @@
   { time: 100.5, text: "土俵際の際際で堪えましょう<br><span class='sub-lyric'>도효기와노 키와기와데 코타에마쇼<br>마지막 순간까지 버텨봅시다</span>", isChant: false },
   { time: 105.0, text: "東京沿線大荒れ模様<br><span class='sub-lyric'>토쿄 엔센 오오아레 모요<br>도쿄 연선 거친 모양</span>", isChant: true },
   { time: 108.7, text: "報道機関 氣裸氣裸 血走ります<br><span class='sub-lyric'>호도키칸 키라키라 치바시리마스<br>보도기관은 핏발이 서있네요</span>", isChant: false },
-  { time: 113.5, text: "冷静と俯瞰は御法度です<br><span class='sub-lyric'>레이세이토 후칸와 고핫토데스<br>냉정과 부감 중요하죠</span>", isChant: false },
+  { time: 113.5, text: "冷静と俯瞰は御法度です<br><span class='sub-lyric'>레이세이토 후칸와 고핫토데스<br>냉정과 부감 중요하죠</span>", isChant: true },
   { time: 117.0, text: "get 1〇st iπ 31", isChant: true },
   { time: 119.0, text: "自分を庇う言葉ばかりを<br><span class='sub-lyric'>지분오 카바우 코토바 바카리오<br>자신을 감싸는 말들로</span>", isChant: false },
   { time: 122.0, text: "いつまで言い聞かせるの？<br><span class='sub-lyric'>이츠마데 이이키카세루노?<br>언제까지 타이를거야?</span>", isChant: false },
