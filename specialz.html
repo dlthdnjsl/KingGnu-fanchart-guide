@@ -127,14 +127,14 @@
       text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
     }
 
-  /* 발음 및 해석 가사 크기 축소 (수정본) */
-.sub-lyric {
-  font-size: 0.8rem !important; /* 글자 크기를 확실하게 작게 고정 */
-  color: #a0a0ab !important;    /* 부모 색상에 안 묻히게 살짝 어두운 색상 */
-  font-weight: normal !important; /* 하이라이트 되어도 굵어지지 않게 설정 */
-  display: block;
-  margin-top: 3px;
-}
+    /* 발음 및 해석 가사 크기 축소 */
+    .sub-lyric {
+      font-size: 0.8rem !important;   /* 글자 크기를 확 줄임 */
+      color: #8a8a98 !important;      /* 살짝 흐린 어두운 색상 */
+      font-weight: 400 !important;    /* 하이라이트 시에도 굵어지지 않음 */
+      display: block;
+      margin-top: 3px;
+    }
   </style>
 </head>
 <body>
@@ -156,33 +156,32 @@
 
   <script>
     // ========================================================
-    // 1. [여기 수정] 유튜브 영상 ID (watch?v= 뒤의 문자열)
+    // 1. 유튜브 영상 ID
     // ========================================================
     const YOUTUBE_VIDEO_ID = '5MZo9otAWAw'; 
 
 
     // ========================================================
-    // 2. [여기 수정] 가사 및 타임코드 데이터 (초 단위 시간, 가사, 떼창여부)
+    // 2. 가사 및 타임코드 데이터
     // ========================================================
     const lyricsData = [
-    const lyricsData = [
-  { time: 0, text: "🎵 (박자에 맞춰서 박수)", isChant: false },
-  { time: 14.0, text: "U R MY SPECIAL", isChant: true },
-  { time: 22.5, text: "U R MY SPECIAL", isChant: true },
-  { time: 24.5, text: "今際の際際で踊りましょう<br><span class='sub-lyric'>이마와노 키와기와데 오도리마쇼<br>죽음 앞에서 춤을 춰봅시다</span>", isChant: false },
-  { time: 29.0, text: "東京前線興の都<br><span class='sub-lyric'>토쿄 젠센 쿄노 미야코<br>도쿄 전선 흥의 도시</span>", isChant: true },
-  { time: 33.0, text: "往生際の際際で足掻きましょう<br><span class='sub-lyric'>오죠기와노 키와기와데 아가키마쇼<br>죽음 앞에서 발버둥쳐봅시다</span>", isChant: false },
-  { time: 37.0, text: "お行儀の悪い面も見せてよ<br><span class='sub-lyric'>오교기노 와루이 츠라모 미세테요<br>예의 없는 모습도 보여줘</span>", isChant: true },
-  { time: 42.0, text: "i luv u baby", isChant: true },
-  { time: 44.0, text: "謳い続けましょう<br><span class='sub-lyric'>우타이 츠즈케마쇼<br>계속 노래를 부릅시다</span>", isChant: false },
-  { time: 45.8, text: "如何痴れ者も 如何余所者も<br><span class='sub-lyric'>돈나 시레모노모 돈나 요소모노모<br>바보도 이방인도 함께</span>", isChant: false },
-  { time: 50.3, text: "心燃える一挙手一投足<br><span class='sub-lyric'>코코로 모에루 잇쿄슈잇토소쿠<br>마음을 태우는 일거수일투족</span>", isChant: false },
-  { time: 54.0, text: "走り出したらアンコントロール<br><span class='sub-lyric'>하시리 다시타라 안콘토루<br>달리기 시작하면 아무도 말리지 못해</span>", isChant: false },
-  { time: 55.5, text: "U R MY SPECIAL", isChant: true }
+      { time: 0, text: "🎵 (박자에 맞춰서 박수)", isChant: false },
+      { time: 14.0, text: "U R MY SPECIAL", isChant: true },
+      { time: 22.5, text: "U R MY SPECIAL", isChant: true },
+      { time: 24.5, text: "今際の際際で踊りましょう<br><span class='sub-lyric'>이마와노 키와기와데 오도리마쇼<br>죽음 앞에서 춤을 춰봅시다</span>", isChant: false },
+      { time: 29.0, text: "東京前線興の都<br><span class='sub-lyric'>토쿄 젠센 쿄노 미야코<br>도쿄 전선 흥의 도시</span>", isChant: true },
+      { time: 33.0, text: "往生際の際際で足掻きましょう<br><span class='sub-lyric'>오죠기와노 키와기와데 아가키마쇼<br>죽음 앞에서 발버둥쳐봅시다</span>", isChant: false },
+      { time: 37.0, text: "お行儀の悪い面も見せてよ<br><span class='sub-lyric'>오교기노 와루이 츠라모 미세테요<br>예의 없는 모습도 보여줘</span>", isChant: true },
+      { time: 42.0, text: "i luv u baby", isChant: true },
+      { time: 44.0, text: "謳い続けましょう<br><span class='sub-lyric'>우타이 츠즈케마쇼<br>계속 노래를 부릅시다</span>", isChant: false },
+      { time: 45.8, text: "如何痴れ者も 如何余所者も<br><span class='sub-lyric'>돈나 시레모노모 돈나 요소모노모<br>바보도 이방인도 함께</span>", isChant: false },
+      { time: 50.3, text: "心燃える一挙手一投足<br><span class='sub-lyric'>코코로 모에루 잇쿄슈잇토소쿠<br>마음을 태우는 일거수일투족</span>", isChant: false },
+      { time: 54.0, text: "走り出したらアンコントロール<br><span class='sub-lyric'>하시리 다시타라 안콘토루<br>달리기 시작하면 아무도 말리지 못해</span>", isChant: false },
+      { time: 55.5, text: "U R MY SPECIAL", isChant: true }
     ];
 
 
-    // --- 아래는 기본 자동 싱크 로직 (수정할 필요 없음) ---
+    // --- 기본 자동 싱크 로직 ---
     let player;
     let timerInterval = null;
     let currentIndex = -1;
