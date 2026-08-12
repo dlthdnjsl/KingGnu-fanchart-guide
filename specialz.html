@@ -126,6 +126,14 @@
       color: var(--chant-color);
       text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
     }
+
+    /* 발음 및 해석 가사 크기 축소 */
+.sub-lyric {
+  font-size: 0.85em; /* 기존 글자 크기의 85% 크기로 축소 */
+  opacity: 0.85; /* (선택) 살짝 흐리게 만들어 원문을 더 돋보이게 함 */
+  display: inline-block;
+  margin-top: 4px; /* 윗줄(원문)과 살짝 여백 주기 */
+  }
   </style>
 </head>
 <body>
@@ -159,7 +167,7 @@
     { time: 0, text: "🎵 (박자에 맞춰서 박수)", isChant: false },
     { time: 14.0, text: "U R MY SPECIAL", isChant: true },
     { time: 22.5, text: "U R MY SPECIAL", isChant: true },
-    { time: 24.5, text: "今際の際際で踊りましょう<br>이마와노 키와기와데 오도리마쇼<br>죽음 앞에서 춤을 춰봅시다", isChant: false },
+    { time: 24.5, text: "今際の際際で踊りましょう<br><span class='sub-lyric'>이마와노 키와기와데 오도리마쇼<br>죽음 앞에서 춤을 춰봅시다</span>", isChant: false },
     { time: 29.0, text: "東京前線興の都<br>토쿄 젠센 쿄노 미야코<br>도쿄 전선 흥의 도시", isChant: true },
     { time: 33.0, text: "往生際の際際で足掻きましょう<br>오죠기와노 키와기와데 아가키마쇼<br>죽음 앞에서 발버둥쳐봅시다", isChant: false },
     { time: 37.0, text: "お行儀の悪い面も見せてよ<br>오교기노 와루이 츠라모 미세테요<br>예의 없는 모습도 보여줘", isChant: true },
