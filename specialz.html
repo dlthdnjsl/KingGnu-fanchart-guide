@@ -127,20 +127,19 @@
       text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
     }
 
-    /* 발음 및 해석 가사 크기 축소 */
-   /* 발음 및 해석 가사 스타일 */
-.sub-lyric {
-  font-size: 0.8rem !important;
-  color: #8a8a98; /* 기본 상태에서는 어두운 회색 */
-  font-weight: 400 !important;
-  display: block;
-  margin-top: 3px;
-  transition: color 0.2s;
-}
+   /* 발음 및 해석 기본 스타일 (평소에는 어두운 색상) */
+    .sub-lyric {
+      font-size: 0.8rem !important;
+      color: #8a8a98;
+      font-weight: 400 !important;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
 
-/* 떼창 파트가 활성화(active)될 때 아래 발음/해석까지 빨간색 계열로 강조 */
-.lyric-line.active.chant .sub-lyric {
-  color: #ff8592 !important; /* 떼창 하이라이트 시 아래 2줄도 붉은 톤으로 같이 밝아짐 */
+    /* 떼창 가사가 활성화(active)될 때 아래 2줄(발음, 해석)도 같이 빨간색으로 강조 */
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff8592 !important;
     }
   </style>
 </head>
