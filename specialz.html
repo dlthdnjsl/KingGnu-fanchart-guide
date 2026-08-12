@@ -117,30 +117,26 @@
       background-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* 떼창 가사 기본 스타일 */
+  /* 떼창 가사 기본 스타일 (일본어 원문) */
     .lyric-line.chant {
       color: #ff6b81;
     }
 
-    /* 떼창 가사 하이라이트 (빨간색 & 네온 효과) */
+    /* 떼창 가사 발음 및 해석 (평소에도 살짝 밝은 붉은 회색) */
+    .lyric-line.chant .sub-lyric {
+      color: #ffa8b2 !important;
+    }
+
+    /* [핵심] 떼창 파트 재생 중(active)일 때 -> 3줄 전체가 강렬하게 붉은색 하이라이트! */
     .lyric-line.active.chant {
-      color: var(--chant-color) !important;
+      color: #ff4757 !important;
       text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
     }
 
-    /* 발음 및 해석 기본 스타일 (평소에는 어두운 색상) */
-    .sub-lyric {
-      font-size: 0.8rem !important;
-      color: #8a8a98;
-      font-weight: 400 !important;
-      display: block;
-      margin-top: 3px;
-      transition: color 0.2s;
-    }
-
-    /* 떼창 가사가 활성화(active)될 때 아래 2줄(발음, 해석)도 같이 빨간색으로 강조 */
+    /* 떼창 파트 재생 중(active)일 때의 아랫줄 발음 및 해석 */
     .lyric-line.active.chant .sub-lyric {
-      color: #ff8592 !important;
+      color: #ff7081 !important;
+      font-weight: 600 !important;
     }
   </style>
 </head>
