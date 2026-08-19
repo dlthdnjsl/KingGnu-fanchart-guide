@@ -191,10 +191,9 @@
       <input type="text" id="searchInput" placeholder="곡 제목 또는 앨범 검색...">
     </div>
 
-    <!-- 정렬 옵션 버튼 -->
+    <!-- 정렬 옵션 버튼 (기본순 제거, 이름순 기본 활성화) -->
     <div class="sort-container">
-      <button class="sort-btn active" data-sort="default">기본순</button>
-      <button class="sort-btn" data-sort="name">이름순 (A-Z)</button>
+      <button class="sort-btn active" data-sort="name">이름순 (A-Z)</button>
       <button class="sort-btn" data-sort="year-desc">최신순</button>
       <button class="sort-btn" data-sort="year-asc">발매연도순</button>
     </div>
@@ -208,7 +207,6 @@
   </footer>
 
   <script>
-    // 곡 데이터 목록 (발매연도 year 속성 포함)
     const songData = [
       {
         title: "SPECIALZ",
@@ -242,10 +240,18 @@
       }
     ];
 
-    let currentSort = "default";
+    // 기본 정렬을 'name'으로 설정
+    let currentSort = "name";
     const songListEl = document.getElementById("songList");
     const searchInput = document.getElementById("searchInput");
     const sortButtons = document.querySelectorAll(".sort-btn");
+
+    // 문자 종류별 우선순위 판별 (영문: 1, 한글: 2, 한자/일본어: 3)
+    function getCharPriority(char) {
+      if (/[a-zA-Z]/.test(char)) return 1;
+      if (/[가-힣]/.test(char)) return 2;
+      return 3;
+    }
 
     function renderList() {
       const query = searchInput.value.toLowerCase().trim();
@@ -258,14 +264,25 @@
 
       // 2. 정렬 옵션 처리
       if (currentSort === "name") {
-        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        filtered.sort((a, b) => {
+          const firstA = a.title.trim().charAt(0);
+          const firstB = b.title.trim().charAt(0);
+          const priorityA = getCharPriority(firstA);
+          const priorityB = getCharPriority(firstB);
+
+          // 영문 -> 한글 -> 한자/기타 순으로 우선 분기
+          if (priorityA !== priorityB) {
+            return priorityA - priorityB;
+          }
+          return a.title.localeCompare(b.title);
+        });
       } else if (currentSort === "year-desc") {
         filtered.sort((a, b) => b.year - a.year);
       } else if (currentSort === "year-asc") {
         filtered.sort((a, b) => a.year - b.year);
       }
 
-      // 3. 렌더링
+      // 3. 화면 렌더링
       songListEl.innerHTML = "";
       if (filtered.length === 0) {
         songListEl.innerHTML = `<div style="text-align:center; color: var(--text-sub); padding: 40px 0;">검색 결과가 없습니다.</div>`;
@@ -304,7 +321,7 @@
     // 검색 입력 이벤트 연결
     searchInput.addEventListener("input", renderList);
 
-    // 초기 화면 실행
+    // 첫 진입 시 실행 (이름순 자동 적용)
     renderList();
   </script>
 </body>
