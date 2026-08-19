@@ -204,14 +204,13 @@
   </footer>
 
   <script>
-    // 곡 데이터 목록 (badge 값으로 원하는 문구를 넣거나 비워둘 수 있습니다)
     const songData = [
       {
         title: "SPECIALZ",
         album: "주술회전 2기 OP",
         year: 2023,
         url: "specialz.html",
-        badge: "HOT" // 원하는 뱃지 문구
+        badge: "HOT"
       },
       {
         title: "Teenager Forever",
@@ -225,98 +224,98 @@
         album: "Sympa",
         year: 2019,
         url: "flash.html",
-        badge: "" // 다른 문구 예시
+        badge: ""
       },
       {
         title: "雨燦々",
         album: "THE GREATEST UNKNOWN",
         year: 2022,
         url: "amesansan.html",
-        badge: "HOT" // 빈칸으로 두면 뱃지가 나타나지 않습니다
+        badge: "HOT"
       },
       {
         title: "Vinyl",
         album: "Tokyo Rendez-Vous",
         year: 2017,
         url: "vinyl.html",
-        badge: "" // 뱃지 없음
+        badge: ""
       },
-       {
+      {
         title: "AIZO",
         album: "주술회전 3기 OP",
         year: 2026,
         url: "aizo.html",
-        badge: "HOT" // 원하는 뱃지 문구
+        badge: "HOT"
       },
       {
         title: "一途",
         album: "주술회전 0 OST",
         year: 2021,
         url: "ichizu.html",
-        badge: "" // 원하는 뱃지 문구
+        badge: ""
       },
       {
         title: "飛行艇",
         album: "CEREMONY",
         year: 2019,
         url: "hikoutei.html",
-        badge: "HOT" // 원하는 뱃지 문구
+        badge: "HOT"
       },
       {
         title: "TWILIGHT!!!",
         album: "명탐정 코난: 흑철의 어영 ED",
         year: 2025,
         url: "twilight.html",
-        badge: "" // 원하는 뱃지 문구
+        badge: ""
       },
       {
         title: "ねっこ",
         album: "",
         year: 2024,
         url: "nekko.html",
-        badge: "" // 원하는 뱃지 문구
+        badge: ""
       },
       {
         title: "SO BAD",
         album: "",
         year: 2024,
         url: "sobad.html",
-        badge: "HOT" // 원하는 뱃지 문구
+        badge: "HOT"
       },
       {
         title: "Prayer X",
         album: "Sympa",
         year: 2018,
         url: "prayerx.html",
-        badge: "HOT" // 원하는 뱃지 문구
+        badge: "HOT"
       },
       {
         title: "STARDOM",
         album: "THE GREATEST UNKNOWN",
         year: 2022,
         url: "stardom.html",
-        badge: "" // 원하는 뱃지 문구
+        badge: ""
       },
       {
         title: "Slumberland",
         album: "Sympa",
         year: 2018,
         url: "slumberland.html",
-        badge: "" // 원하는 뱃지 문구
+        badge: ""
       },
       {
         title: "Sorrows",
         album: "Sympa",
         year: 2019,
         url: "sorrows.html",
-        badge: "" // 원하는 뱃지 문구
+        badge: ""
       },
       {
         title: "):阿修羅:(",
         album: "THE GREATEST UNKNOWN",
         year: 2023,
         url: "asura.html",
-        badge: "" // 원하는 뱃지 문구
+        badge: ""
       },
     ];
 
@@ -325,9 +324,21 @@
     const searchInput = document.getElementById("searchInput");
     const sortButtons = document.querySelectorAll(".sort-btn");
 
-    function getCharPriority(char) {
-      if (/[a-zA-Z]/.test(char)) return 1;
-      if (/[가-힣]/.test(char)) return 2;
+    // 일본어/한자 곡 커스텀 고정 순서 정의
+    const customJapaneseOrder = [
+      "):阿修羅:(",
+      "雨燦々",
+      "一途",
+      "ねっこ",
+      "飛行艇"
+    ];
+
+    // 첫 글자 기준 언어 우선순위 (영문: 1, 한글: 2, 일본어/한자/특수기호: 3)
+    function getCharPriority(title) {
+      const firstChar = title.trim().charAt(0);
+      if (title.includes("阿修羅")) return 3; // ):阿修羅:( 대응
+      if (/[a-zA-Z]/.test(firstChar)) return 1;
+      if (/[가-힣]/.test(firstChar)) return 2;
       return 3;
     }
 
@@ -341,15 +352,28 @@
 
       if (currentSort === "name") {
         filtered.sort((a, b) => {
-          const firstA = a.title.trim().charAt(0);
-          const firstB = b.title.trim().charAt(0);
-          const priorityA = getCharPriority(firstA);
-          const priorityB = getCharPriority(firstB);
+          const priorityA = getCharPriority(a.title);
+          const priorityB = getCharPriority(b.title);
 
+          // 1. 영문 -> 한글 -> 일본어/기타 우선순위 구분
           if (priorityA !== priorityB) {
             return priorityA - priorityB;
           }
-          return a.title.localeCompare(b.title);
+
+          // 2. 일본어/한자 그룹일 경우: 지정된 커스텀 순서 적용
+          if (priorityA === 3) {
+            const indexA = customJapaneseOrder.indexOf(a.title);
+            const indexB = customJapaneseOrder.indexOf(b.title);
+
+            if (indexA !== -1 && indexB !== -1) {
+              return indexA - indexB;
+            }
+            if (indexA !== -1) return -1;
+            if (indexB !== -1) return 1;
+          }
+
+          // 3. 영문 그룹인 경우: 알파벳 오름차순 정렬
+          return a.title.localeCompare(b.title, undefined, { sensitivity: 'base' });
         });
       } else if (currentSort === "year-desc") {
         filtered.sort((a, b) => b.year - a.year);
@@ -368,7 +392,6 @@
         card.href = song.url;
         card.className = "song-card";
 
-        // badge 값이 있을 때만 뱃지 태그를 생성하고, 없으면 빈 문자열로 처리
         const badgeHtml = song.badge ? `<span class="badge-chant">${song.badge}</span>` : "";
 
         card.innerHTML = `
