@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>King Gnu - SPECIALZ (떼창 가이드)</title>
+  <title>King Gnu - Flash!!! (떼창 가이드)</title>
   <style>
     :root {
       --bg-color: #0f0f12;
@@ -67,12 +67,12 @@
       font-weight: 700;
     }
 
-    /* 유튜브 플레이어 박스 (모바일 대응 높이 최적화) */
+    /* 유튜브 플레이어 박스 */
     .player-wrapper {
       width: 100%;
       max-width: 560px;
       aspect-ratio: 16 / 9;
-      max-height: 220px; /* 모바일에서 영상 크기를 적절히 줄임 */
+      max-height: 220px;
       margin-bottom: 16px;
       border-radius: 12px;
       overflow: hidden;
@@ -84,11 +84,11 @@
       height: 100%;
     }
 
-    /* 가사 스크롤 영역 (높이 확장) */
+    /* 가사 스크롤 영역 */
     .lyrics-wrapper {
       width: 100%;
       max-width: 560px;
-      height: 52vh; /* 화면 높이의 절반 이상을 가사 영역으로 활용 */
+      height: 52vh;
       min-height: 280px;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -109,7 +109,17 @@
       cursor: pointer;
     }
 
-    /* 현재 재생 중인 가사 하이라이트 */
+    /* 기본 아랫줄(발음/해석) 스타일 - 평소 일반 가사는 회색 & 작은 글씨 */
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #8a8a98;
+      font-weight: 400;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
+
+    /* 1. 일반 가사 재생 중(active) -> 윗줄 흰색 강조 */
     .lyric-line.active {
       color: var(--text-active);
       font-weight: 700;
@@ -117,13 +127,16 @@
       background-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* 떼창 파트 스타일 */
-    .lyric-line.chant {
-      color: #ff6b81;
+    /* 2. 떼창 가사 평소 상태 -> 원문, 발음, 해석 전부 동일한 빨간색 통일 */
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
     }
 
-    .lyric-line.active.chant {
-      color: var(--chant-color);
+    /* 3. 떼창 가사 재생 중(active) -> 3줄 전부 선명한 네온 빨간색으로 통일 */
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
       text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
     }
   </style>
@@ -133,8 +146,8 @@
   <!-- 상단 뒤로가기 및 제목 -->
   <div class="top-bar">
     <a href="index.html" class="back-btn">← 목록으로</a>
-    <div class="page-title">SPECIALZ</div>
-    <div style="width: 70px;"></div> <!-- 정렬용 여백 -->
+    <div class="page-title">Flash!!!</div>
+    <div style="width: 70px;"></div>
   </div>
 
   <!-- 유튜브 동영상 영역 -->
@@ -146,36 +159,35 @@
   <div class="lyrics-wrapper" id="lyricsContainer"></div>
 
   <script>
-    // ========================================================
-    // 1. [여기 수정] 유튜브 영상 ID (watch?v= 뒤의 문자열)
-    // ========================================================
-    const YOUTUBE_VIDEO_ID = 'f_Rky9q2VvM'; 
+    const YOUTUBE_VIDEO_ID = 'j_NHrPC3ij8'; 
 
-
-    // ========================================================
-    // 2. [여기 수정] 가사 및 타임코드 데이터 (초 단위 시간, 가사, 떼창여부)
-    // ========================================================
+    // 가사 데이터 및 태그 구조 예시 (타임코드 기본 0.0 설정)
     const lyricsData = [
-      { time: 0, text: "🎵 (반주 구간)", isChant: false },
-      { time: 10.5, text: "You are my special", isChant: false },
-      { time: 13.0, text: "今際の際で踊りましょ (마지막 순간에 춤춥시다)", isChant: true },
-      { time: 18.2, text: "東京前線狂乱騒ぎ (도쿄 전선 광란의 소동)", isChant: false },
-      { time: 22.0, text: "Get crazy for me!!", isChant: true },
-      { time: 25.5, text: "今宵、宴の華を添えましょう (오늘 밤 연회의 꽃을 더해봅시다)", isChant: false }
+      { time: 0.0, text: "Ladies and gentleman, King Gnu", isChant: false },
+      { time: 20.8, text: "It's flash!", isChant: true },
+       { time: 24.0, text: "It's flash!", isChant: true },
+       { time: 27.8, text: "It's, it's flash!", isChant: true },
+       { time: 31.7, text: "It's flash!", isChant: true },
+      { time: 35.8, text: "全ては冗談だって ホンモンかニセモンかなんて<br><span class='sub-lyric'>스베테와 죠단닷테 혼몬카 니세몬카 난테<br>모든 건 농담이야 진짜 가짜 따위는</span>", isChant: false },
+      { time: 39.5, text: "くだらねえぜ真実なんて ただ下り坂を猛スピードで<br><span class='sub-lyric'>쿠다라네제 신지츠난테 타다 쿠다리자카오 모스피도데<br>진실 같은 건 시시해 그저 내리막길을 엄청난 스피드로</span>", isChant: false },
+      { time: 43.0, text: "駆け抜けるんだ 振り払えんだ 思いのままに<br><span class='sub-lyric'>카케누케룬다 후리하라엔다 오모이노마마니<br>마음껏 달려가는 거야 뿌리치는 거야</span>", isChant: false },
+      { time: 46.3, text: "(oh no)", isChant: true },
+      { time: 47.5, text: "ブレーキは折れちまってんだ<br><span class='sub-lyric'>브레키와 오레치맛텐다<br>브레이크는 부러졌어</span>", isChant: false },
+        { time: 49.5, text: "It's flash!", isChant: true },
+       { time: 53.1, text: "It's flash!", isChant: true },
+       { time: 56.5, text: "It's, it's flash!", isChant: true },
+       { time: 60.0, text: "It's flash!", isChant: true },
     ];
 
-
-    // --- 아래는 기본 자동 싱크 로직 (수정할 필요 없음) ---
     let player;
     let timerInterval = null;
     let currentIndex = -1;
 
-    // 가사 HTML 요소 생성
     const container = document.getElementById('lyricsContainer');
     lyricsData.forEach((item, index) => {
       const div = document.createElement('div');
       div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
-      div.innerText = item.text;
+      div.innerHTML = item.text;
       div.id = `lyric-${index}`;
       
       div.addEventListener('click', () => {
@@ -188,7 +200,6 @@
       container.appendChild(div);
     });
 
-    // YouTube Iframe API 로드
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.head.appendChild(tag);
