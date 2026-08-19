@@ -54,11 +54,14 @@
       font-size: 0.95rem;
     }
 
-    /* 검색창 */
-    .search-box {
+    /* 컨트롤러 영역 (검색창 + 정렬 버튼) */
+    .controls-wrapper {
       width: 100%;
       max-width: 600px;
-      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
     }
 
     .search-box input {
@@ -75,6 +78,36 @@
 
     .search-box input:focus {
       border-color: var(--accent-color);
+    }
+
+    /* 정렬 버튼 컨테이너 */
+    .sort-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sort-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-sub);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sort-btn:hover {
+      color: var(--text-main);
+      border-color: #444455;
+    }
+
+    .sort-btn.active {
+      background-color: rgba(255, 71, 87, 0.15);
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      font-weight: 600;
     }
 
     /* 곡 리스트 그리드 */
@@ -120,6 +153,9 @@
     .song-album {
       font-size: 0.85rem;
       color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .badge-chant {
@@ -130,6 +166,7 @@
       padding: 6px 12px;
       border-radius: 20px;
       border: 1px solid rgba(255, 71, 87, 0.3);
+      white-space: nowrap;
     }
 
     /* 푸터 */
@@ -148,84 +185,127 @@
     <p>킹누 라이브 떼창 가이드</p>
   </header>
 
-  <!-- 곡 검색 기능 -->
-  <div class="search-box">
-    <input type="text" id="searchInput" onkeyup="filterSongs()" placeholder="곡 제목 검색">
+  <div class="controls-wrapper">
+    <!-- 곡 검색 기능 -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="곡 제목 또는 앨범 검색...">
+    </div>
+
+    <!-- 정렬 옵션 버튼 -->
+    <div class="sort-container">
+      <button class="sort-btn active" data-sort="default">기본순</button>
+      <button class="sort-btn" data-sort="name">이름순 (A-Z)</button>
+      <button class="sort-btn" data-sort="year-desc">최신순</button>
+      <button class="sort-btn" data-sort="year-asc">발매연도순</button>
+    </div>
   </div>
 
-  <!-- 곡 목록 -->
-  <div class="song-grid" id="songList">
-    
-    <!-- 곡 1 -->
-    <a href="specialz.html" class="song-card">
-      <div class="song-info">
-        <div class="song-title">SPECIALZ</div>
-        <div class="song-album">주술회전 2기 OP</div>
-      </div>
-      <span class="badge-chant">떼창가이드</span>
-    </a>
-
-    <!-- 곡 2 -->
-    <a href="teenagerforever.html" class="song-card">
-      <div class="song-info">
-        <div class="song-title">Teenager Forever</div>
-        <div class="song-album">CEREMONY</div>
-      </div>
-      <span class="badge-chant">떼창가이드</span>
-    </a>
-
-    <!-- 곡 3 -->
-    <a href="flash.html" class="song-card">
-      <div class="song-info">
-        <div class="song-title">Flash!!!</div>
-        <div class="song-album">Sympa</div>
-      </div>
-      <span class="badge-chant">떼창가이드</span>
-    </a>
-
-    <!-- 곡 4 -->
-    <a href="amesansan.html" class="song-card">
-      <div class="song-info">
-        <div class="song-title">雨燦々</div>
-        <div class="song-album">THE GREATEST UNKNOWN</div>
-      </div>
-      <span class="badge-chant">떼창가이드</span>
-    </a>
-    
-     <!-- 곡 5 -->
-    <a href="vinyl.html" class="song-card">
-      <div class="song-info">
-        <div class="song-title">Vinyl</div>
-        <div class="song-album">Tokyo Rendez-Vous</div>
-      </div>
-      <span class="badge-chant">떼창가이드</span>
-    </a>
-
-  </div>
+  <!-- 곡 목록 렌더링 영역 -->
+  <div class="song-grid" id="songList"></div>
 
   <footer>
     <p>King Gnu Fan Chant Guide</p>
   </footer>
 
   <script>
-    // 검색 필터링 함수
-    function filterSongs() {
-      const input = document.getElementById('searchInput');
-      const filter = input.value.toLowerCase();
-      const songList = document.getElementById('songList');
-      const cards = songList.getElementsByClassName('song-card');
-
-      for (let i = 0; i < cards.length; i++) {
-        const title = cards[i].querySelector('.song-title').innerText;
-        const album = cards[i].querySelector('.song-album').innerText;
-        
-        if (title.toLowerCase().includes(filter) || album.toLowerCase().includes(filter)) {
-          cards[i].style.display = "flex";
-        } else {
-          cards[i].style.display = "none";
-        }
+    // 곡 데이터 목록 (발매연도 year 속성 포함)
+    const songData = [
+      {
+        title: "SPECIALZ",
+        album: "주술회전 2기 OP",
+        year: 2023,
+        url: "specialz.html"
+      },
+      {
+        title: "Teenager Forever",
+        album: "CEREMONY",
+        year: 2020,
+        url: "teenagerforever.html"
+      },
+      {
+        title: "Flash!!!",
+        album: "Sympa",
+        year: 2019,
+        url: "flash.html"
+      },
+      {
+        title: "雨燦々",
+        album: "THE GREATEST UNKNOWN",
+        year: 2022,
+        url: "amesansan.html"
+      },
+      {
+        title: "Vinyl",
+        album: "Tokyo Rendez-Vous",
+        year: 2017,
+        url: "vinyl.html"
       }
+    ];
+
+    let currentSort = "default";
+    const songListEl = document.getElementById("songList");
+    const searchInput = document.getElementById("searchInput");
+    const sortButtons = document.querySelectorAll(".sort-btn");
+
+    function renderList() {
+      const query = searchInput.value.toLowerCase().trim();
+
+      // 1. 검색 필터링
+      let filtered = songData.filter(song => 
+        song.title.toLowerCase().includes(query) || 
+        song.album.toLowerCase().includes(query)
+      );
+
+      // 2. 정렬 옵션 처리
+      if (currentSort === "name") {
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+      } else if (currentSort === "year-desc") {
+        filtered.sort((a, b) => b.year - a.year);
+      } else if (currentSort === "year-asc") {
+        filtered.sort((a, b) => a.year - b.year);
+      }
+
+      // 3. 렌더링
+      songListEl.innerHTML = "";
+      if (filtered.length === 0) {
+        songListEl.innerHTML = `<div style="text-align:center; color: var(--text-sub); padding: 40px 0;">검색 결과가 없습니다.</div>`;
+        return;
+      }
+
+      filtered.forEach(song => {
+        const card = document.createElement("a");
+        card.href = song.url;
+        card.className = "song-card";
+        card.innerHTML = `
+          <div class="song-info">
+            <div class="song-title">${song.title}</div>
+            <div class="song-album">
+              <span>${song.album}</span>
+              <span>•</span>
+              <span>${song.year}년</span>
+            </div>
+          </div>
+          <span class="badge-chant">떼창가이드</span>
+        `;
+        songListEl.appendChild(card);
+      });
     }
+
+    // 정렬 버튼 클릭 이벤트 연결
+    sortButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        sortButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentSort = btn.dataset.sort;
+        renderList();
+      });
+    });
+
+    // 검색 입력 이벤트 연결
+    searchInput.addEventListener("input", renderList);
+
+    // 초기 화면 실행
+    renderList();
   </script>
 </body>
 </html>
