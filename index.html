@@ -153,9 +153,6 @@
     .song-album {
       font-size: 0.85rem;
       color: var(--text-sub);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .badge-chant {
@@ -191,7 +188,7 @@
       <input type="text" id="searchInput" placeholder="곡 제목 또는 앨범 검색...">
     </div>
 
-    <!-- 정렬 옵션 버튼 (기본순 제거, 이름순 기본 활성화) -->
+    <!-- 정렬 옵션 버튼 -->
     <div class="sort-container">
       <button class="sort-btn active" data-sort="name">이름순 (A-Z)</button>
       <button class="sort-btn" data-sort="year-desc">최신순</button>
@@ -207,46 +204,127 @@
   </footer>
 
   <script>
+    // 곡 데이터 목록 (badge 값으로 원하는 문구를 넣거나 비워둘 수 있습니다)
     const songData = [
       {
         title: "SPECIALZ",
         album: "주술회전 2기 OP",
         year: 2023,
-        url: "specialz.html"
+        url: "specialz.html",
+        badge: "HOT" // 원하는 뱃지 문구
       },
       {
         title: "Teenager Forever",
         album: "CEREMONY",
         year: 2020,
-        url: "teenagerforever.html"
+        url: "teenagerforever.html",
+        badge: "HOT"
       },
       {
         title: "Flash!!!",
         album: "Sympa",
         year: 2019,
-        url: "flash.html"
+        url: "flash.html",
+        badge: "" // 다른 문구 예시
       },
       {
         title: "雨燦々",
         album: "THE GREATEST UNKNOWN",
         year: 2022,
-        url: "amesansan.html"
+        url: "amesansan.html",
+        badge: "HOT" // 빈칸으로 두면 뱃지가 나타나지 않습니다
       },
       {
         title: "Vinyl",
         album: "Tokyo Rendez-Vous",
         year: 2017,
-        url: "vinyl.html"
-      }
+        url: "vinyl.html",
+        badge: "" // 뱃지 없음
+      },
+       {
+        title: "AIZO",
+        album: "주술회전 3기 OP",
+        year: 2026,
+        url: "aizo.html",
+        badge: "HOT" // 원하는 뱃지 문구
+      },
+      {
+        title: "一途",
+        album: "주술회전 0 OST",
+        year: 2021,
+        url: "ichizu.html",
+        badge: "" // 원하는 뱃지 문구
+      },
+      {
+        title: "飛行艇",
+        album: "CEREMONY",
+        year: 2019,
+        url: "hikoutei.html",
+        badge: "HOT" // 원하는 뱃지 문구
+      },
+      {
+        title: "TWILIGHT!!!",
+        album: "명탐정 코난: 흑철의 어영 ED",
+        year: 2025,
+        url: "twilight.html",
+        badge: "" // 원하는 뱃지 문구
+      },
+      {
+        title: "ねっこ",
+        album: "",
+        year: 2024,
+        url: "nekko.html",
+        badge: "" // 원하는 뱃지 문구
+      },
+      {
+        title: "SO BAD",
+        album: "",
+        year: 2024,
+        url: "sobad.html",
+        badge: "HOT" // 원하는 뱃지 문구
+      },
+      {
+        title: "Prayer X",
+        album: "Sympa",
+        year: 2018,
+        url: "prayerx.html",
+        badge: "HOT" // 원하는 뱃지 문구
+      },
+      {
+        title: "STARDOM",
+        album: "THE GREATEST UNKNOWN",
+        year: 2022,
+        url: "stardom.html",
+        badge: "" // 원하는 뱃지 문구
+      },
+      {
+        title: "Slumberland",
+        album: "Sympa",
+        year: 2018,
+        url: "slumberland.html",
+        badge: "" // 원하는 뱃지 문구
+      },
+      {
+        title: "Sorrows",
+        album: "Sympa",
+        year: 2019,
+        url: "sorrows.html",
+        badge: "" // 원하는 뱃지 문구
+      },
+      {
+        title: "):阿修羅:(",
+        album: "THE GREATEST UNKNOWN",
+        year: 2023,
+        url: "asura.html",
+        badge: "" // 원하는 뱃지 문구
+      },
     ];
 
-    // 기본 정렬을 'name'으로 설정
     let currentSort = "name";
     const songListEl = document.getElementById("songList");
     const searchInput = document.getElementById("searchInput");
     const sortButtons = document.querySelectorAll(".sort-btn");
 
-    // 문자 종류별 우선순위 판별 (영문: 1, 한글: 2, 한자/일본어: 3)
     function getCharPriority(char) {
       if (/[a-zA-Z]/.test(char)) return 1;
       if (/[가-힣]/.test(char)) return 2;
@@ -256,13 +334,11 @@
     function renderList() {
       const query = searchInput.value.toLowerCase().trim();
 
-      // 1. 검색 필터링
       let filtered = songData.filter(song => 
         song.title.toLowerCase().includes(query) || 
         song.album.toLowerCase().includes(query)
       );
 
-      // 2. 정렬 옵션 처리
       if (currentSort === "name") {
         filtered.sort((a, b) => {
           const firstA = a.title.trim().charAt(0);
@@ -270,7 +346,6 @@
           const priorityA = getCharPriority(firstA);
           const priorityB = getCharPriority(firstB);
 
-          // 영문 -> 한글 -> 한자/기타 순으로 우선 분기
           if (priorityA !== priorityB) {
             return priorityA - priorityB;
           }
@@ -282,7 +357,6 @@
         filtered.sort((a, b) => a.year - b.year);
       }
 
-      // 3. 화면 렌더링
       songListEl.innerHTML = "";
       if (filtered.length === 0) {
         songListEl.innerHTML = `<div style="text-align:center; color: var(--text-sub); padding: 40px 0;">검색 결과가 없습니다.</div>`;
@@ -293,22 +367,21 @@
         const card = document.createElement("a");
         card.href = song.url;
         card.className = "song-card";
+
+        // badge 값이 있을 때만 뱃지 태그를 생성하고, 없으면 빈 문자열로 처리
+        const badgeHtml = song.badge ? `<span class="badge-chant">${song.badge}</span>` : "";
+
         card.innerHTML = `
           <div class="song-info">
             <div class="song-title">${song.title}</div>
-            <div class="song-album">
-              <span>${song.album}</span>
-              <span>•</span>
-              <span>${song.year}년</span>
-            </div>
+            <div class="song-album">${song.album}</div>
           </div>
-          <span class="badge-chant">떼창가이드</span>
+          ${badgeHtml}
         `;
         songListEl.appendChild(card);
       });
     }
 
-    // 정렬 버튼 클릭 이벤트 연결
     sortButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         sortButtons.forEach(b => b.classList.remove("active"));
@@ -318,10 +391,8 @@
       });
     });
 
-    // 검색 입력 이벤트 연결
     searchInput.addEventListener("input", renderList);
 
-    // 첫 진입 시 실행 (이름순 자동 적용)
     renderList();
   </script>
 </body>
