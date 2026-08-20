@@ -81,6 +81,7 @@
     /* 토글 정렬 버튼 컨테이너 */
     .sort-container {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
     }
 
@@ -193,10 +194,11 @@
       <input type="text" id="searchInput" placeholder="곡 제목 또는 앨범 검색...">
     </div>
 
-    <!-- 2가지 토글 버튼 -->
+    <!-- 3가지 토글 버튼 -->
     <div class="sort-container">
-      <button class="sort-btn active" id="btnSortName" data-type="name">이름순 ↑ (A-Z)</button>
-      <button class="sort-btn" id="btnSortYear" data-type="year">발매연도순 ↑ (과거순)</button>
+      <button class="sort-btn active" id="btnSortName">이름순 ↑ (A-Z)</button>
+      <button class="sort-btn" id="btnSortYear">발매연도순 ↑ (과거순)</button>
+      <button class="sort-btn" id="btnSortAlbum">앨범순 ↑ (1집부터)</button>
     </div>
   </div>
 
@@ -226,13 +228,14 @@
       { title: "):阿修羅:(", album: "THE GREATEST UNKNOWN", year: 2023, url: "asura.html", badge: "" }
     ];
 
-    // 정렬 상태 관리 (name-asc, name-desc, year-asc, year-desc)
     let currentSortMode = "name-asc";
 
     const songListEl = document.getElementById("songList");
     const searchInput = document.getElementById("searchInput");
     const btnSortName = document.getElementById("btnSortName");
     const btnSortYear = document.getElementById("btnSortYear");
+    const btnSortAlbum = document.getElementById("btnSortAlbum");
+    const allButtons = [btnSortName, btnSortYear, btnSortAlbum];
 
     const customJapaneseOrder = [
       "):阿修羅:(",
@@ -248,6 +251,16 @@
       if (/[a-zA-Z]/.test(firstChar)) return 1;
       if (/[가-힣]/.test(firstChar)) return 2;
       return 3;
+    }
+
+    // 앨범 우선순위 (1: Tokyo Rendez-Vous, 2: Sympa, 3: CEREMONY, 4: THE GREATEST UNKNOWN, 5: 기타 싱글)
+    function getAlbumPriority(album) {
+      const a = (album || "").toLowerCase();
+      if (a.includes("tokyo rendez-vous")) return 1;
+      if (a.includes("sympa")) return 2;
+      if (a.includes("ceremony")) return 3;
+      if (a.includes("greatest unknown")) return 4;
+      return 5;
     }
 
     function renderList() {
@@ -280,7 +293,7 @@
         filtered.sort((a, b) => {
           const pA = getCharPriority(a.title);
           const pB = getCharPriority(b.title);
-          if (pA !== pB) return pB - pA; // 일본어 -> 한글 -> 영문 역순
+          if (pA !== pB) return pB - pA;
 
           if (pA === 3) {
             const idxA = customJapaneseOrder.indexOf(a.title);
@@ -299,6 +312,24 @@
       // 발매연도 내림차순(최신순)
       else if (currentSortMode === "year-desc") {
         filtered.sort((a, b) => b.year - a.year);
+      }
+      // 앨범순 오름차순 (도쿄 랑데부 -> 심파 -> 세레머니 -> 더 그레이티스트 언노운 -> 기타)
+      else if (currentSortMode === "album-asc") {
+        filtered.sort((a, b) => {
+          const pA = getAlbumPriority(a.album);
+          const pB = getAlbumPriority(b.album);
+          if (pA !== pB) return pA - pB;
+          return a.year - b.year || a.title.localeCompare(b.title);
+        });
+      }
+      // 앨범순 내림차순 (기타 최신 -> 더 그레이티스트 언노운 -> 세레머니 -> 심파 -> 도쿄 랑데부)
+      else if (currentSortMode === "album-desc") {
+        filtered.sort((a, b) => {
+          const pA = getAlbumPriority(a.album);
+          const pB = getAlbumPriority(b.album);
+          if (pA !== pB) return pB - pA;
+          return b.year - a.year || a.title.localeCompare(b.title);
+        });
       }
 
       songListEl.innerHTML = "";
@@ -324,11 +355,14 @@
       });
     }
 
+    function setActiveBtn(activeBtn) {
+      allButtons.forEach(btn => btn.classList.remove("active"));
+      activeBtn.classList.add("active");
+    }
+
     // 이름순 토글 클릭
     btnSortName.addEventListener("click", () => {
-      btnSortYear.classList.remove("active");
-      btnSortName.classList.add("active");
-
+      setActiveBtn(btnSortName);
       if (currentSortMode === "name-asc") {
         currentSortMode = "name-desc";
         btnSortName.innerText = "이름순 ↓ (Z-A)";
@@ -339,17 +373,28 @@
       renderList();
     });
 
-    // 발매연도 토글 클릭
+    // 발매연도순 토글 클릭
     btnSortYear.addEventListener("click", () => {
-      btnSortName.classList.remove("active");
-      btnSortYear.classList.add("active");
-
+      setActiveBtn(btnSortYear);
       if (currentSortMode === "year-asc") {
         currentSortMode = "year-desc";
         btnSortYear.innerText = "발매연도순 ↓ (최신순)";
       } else {
         currentSortMode = "year-asc";
         btnSortYear.innerText = "발매연도순 ↑ (과거순)";
+      }
+      renderList();
+    });
+
+    // 앨범순 토글 클릭
+    btnSortAlbum.addEventListener("click", () => {
+      setActiveBtn(btnSortAlbum);
+      if (currentSortMode === "album-asc") {
+        currentSortMode = "album-desc";
+        btnSortAlbum.innerText = "앨범순 ↓ (최신앨범부터)";
+      } else {
+        currentSortMode = "album-asc";
+        btnSortAlbum.innerText = "앨범순 ↑ (1집부터)";
       }
       renderList();
     });
