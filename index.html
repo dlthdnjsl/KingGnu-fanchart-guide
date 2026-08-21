@@ -34,7 +34,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     header h1 {
@@ -54,6 +54,63 @@
       font-size: 0.9rem;
     }
 
+    /* 전곡 MV 연속 감상 (STATION) 섹션 */
+    .station-section {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 20px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .station-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .station-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .station-title span {
+      color: var(--accent-color);
+    }
+
+    .station-tag {
+      font-size: 0.72rem;
+      color: var(--text-sub);
+      background-color: rgba(255, 255, 255, 0.06);
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    .station-player-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 200px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .station-player-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
     .controls-wrapper {
       width: 100%;
       max-width: 600px;
@@ -63,7 +120,6 @@
       margin-bottom: 20px;
     }
 
-    /* 검색창 크기 축소 (패딩 및 폰트 슬림화) */
     .search-box input {
       width: 100%;
       padding: 10px 16px;
@@ -80,7 +136,6 @@
       border-color: var(--accent-color);
     }
 
-    /* 토글 정렬 버튼 컨테이너: 3등분 그리드로 모바일 1줄 고정 */
     .sort-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -88,7 +143,6 @@
       width: 100%;
     }
 
-    /* 버튼 크기 및 텍스트 자동 축소 */
     .sort-btn {
       padding: 7px 4px;
       border-radius: 16px;
@@ -184,22 +238,39 @@
   <meta property="og:description" content="King Gnu 라이브 응원법 가이드">
   <meta property="og:image" content="https://kinggnu-fanchant-guide-kr.pages.dev/og-image.jpg">
   
-  <!-- 트위터(X) 공유 대응 -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://kinggnu-fanchant-guide-kr.pages.dev/og-image.jpg">
 </head>
 <body>
 
   <header>
-    <h1>King Gnu <span>떼창 가이드</span></h1>
+    <h1>King Gnu <span>Fan Chant Guide</span></h1>
+    <p>킹누 라이브 떼창 가이드</p>
   </header>
+
+  <!-- 전곡 MV 연속 감상 (STATION) 미니 플레이어 -->
+  <div class="station-section">
+    <div class="station-header">
+      <div class="station-title">
+        <span>▶</span> 전곡 MV 연속 감상 (STATION)
+      </div>
+      <div class="station-tag">Non-Stop MV</div>
+    </div>
+    <div class="station-player-wrapper">
+      <iframe 
+        src="https://www.youtube.com/embed/kXoE-5t8tzg?rel=0&modestbranding=1&playsinline=1" 
+        title="King Gnu - STATION" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
 
   <div class="controls-wrapper">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="곡 제목 또는 앨범 검색...">
     </div>
 
-    <!-- 3등분 그리드 1줄 배치 -->
     <div class="sort-container">
       <button class="sort-btn active" id="btnSortName">이름순 ↑ (A-Z)</button>
       <button class="sort-btn" id="btnSortYear">발매연도순 ↑ (과거순)</button>
@@ -225,7 +296,7 @@
       { title: "飛行艇", album: "CEREMONY", year: 2019, url: "hikoutei.html", badge: "HOT" },
       { title: "TWILIGHT!!!", album: "명탐정 코난: 흑철의 어영 ED", year: 2025, url: "twilight.html", badge: "" },
       { title: "ねっこ", album: "", year: 2024, url: "nekko.html", badge: "" },
-      { title: "SO BAD", album: "유니버셜 스튜디오 Zombie de Dance 테마송", year: 2024, url: "sobad.html", badge: "HOT" },
+      { title: "SO BAD", album: "유니버셜 스튜디오 좀비 데 댄스 콜라보 곡", year: 2024, url: "sobad.html", badge: "HOT" },
       { title: "Prayer X", album: "Sympa", year: 2018, url: "prayerx.html", badge: "HOT" },
       { title: "STARDOM", album: "THE GREATEST UNKNOWN", year: 2022, url: "stardom.html", badge: "" },
       { title: "Slumberland", album: "Sympa", year: 2018, url: "slumberland.html", badge: "" },
@@ -275,7 +346,6 @@
         song.album.toLowerCase().includes(query)
       );
 
-      // 이름순 오름차순(A-Z)
       if (currentSortMode === "name-asc") {
         filtered.sort((a, b) => {
           const pA = getCharPriority(a.title);
@@ -292,7 +362,6 @@
           return a.title.localeCompare(b.title, undefined, { sensitivity: 'base' });
         });
       } 
-      // 이름순 내림차순(Z-A)
       else if (currentSortMode === "name-desc") {
         filtered.sort((a, b) => {
           const pA = getCharPriority(a.title);
@@ -309,15 +378,12 @@
           return b.title.localeCompare(a.title, undefined, { sensitivity: 'base' });
         });
       } 
-      // 발매연도 오름차순(과거순)
       else if (currentSortMode === "year-asc") {
         filtered.sort((a, b) => a.year - b.year);
       } 
-      // 발매연도 내림차순(최신순)
       else if (currentSortMode === "year-desc") {
         filtered.sort((a, b) => b.year - a.year);
       }
-      // 앨범순 오름차순 (도쿄 랑데부 -> 심파 -> 세레머니 -> 더 그레이티스트 언노운 -> 기타)
       else if (currentSortMode === "album-asc") {
         filtered.sort((a, b) => {
           const pA = getAlbumPriority(a.album);
@@ -326,7 +392,6 @@
           return a.year - b.year || a.title.localeCompare(b.title);
         });
       }
-      // 앨범순 내림차순 (기타 최신 -> 더 그레이티스트 언노운 -> 세레머니 -> 심파 -> 도쿄 랑데부)
       else if (currentSortMode === "album-desc") {
         filtered.sort((a, b) => {
           const pA = getAlbumPriority(a.album);
@@ -364,7 +429,6 @@
       activeBtn.classList.add("active");
     }
 
-    // 이름순 토글 클릭
     btnSortName.addEventListener("click", () => {
       setActiveBtn(btnSortName);
       if (currentSortMode === "name-asc") {
@@ -377,7 +441,6 @@
       renderList();
     });
 
-    // 발매연도순 토글 클릭
     btnSortYear.addEventListener("click", () => {
       setActiveBtn(btnSortYear);
       if (currentSortMode === "year-asc") {
@@ -390,7 +453,6 @@
       renderList();
     });
 
-    // 앨범순 토글 클릭
     btnSortAlbum.addEventListener("click", () => {
       setActiveBtn(btnSortAlbum);
       if (currentSortMode === "album-asc") {
