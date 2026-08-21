@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - Prayer X</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* 상단 헤더 & '←' 뒤로가기 버튼 */
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* 유튜브 플레이어 영역 */
+    .player-wrapper {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 가사 스크롤 영역 */
+    .lyrics-wrapper {
+      width: 100%;
+      max-width: 560px;
+      height: 52vh;
+      min-height: 280px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 12px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .lyric-line {
+      padding: 10px 12px;
+      margin: 4px 0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #8a8a98;
+      font-weight: 400;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
+
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">Prayer X</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <div class="player-wrapper">
+    <div id="player"></div>
+  </div>
+
+  <div class="lyrics-wrapper" id="lyricsContainer"></div>
+
+  <script>
+    // Prayer X 공식 뮤직비디오 또는 라이브 영상 ID를 입력해 주세요 (기본 MV ID)
+    const YOUTUBE_VIDEO_ID = 'L-Bzhpm8h0o'; 
+
+    // Prayer X 가사 데이터 규격 예시
+    const lyricsData = [
+      { time: 1.0, text: "溢れ出した涙のように<br><span class='sub-lyric'>아후레다시타 나미다노요오니<br>흘러넘친 눈물처럼</span>", isChant: true },
+  { time: 6.0, text: "一時の煌めく命ならば<br><span class='sub-lyric'>히토토키노 키라메쿠 이노치나라바<br>한순간의 반짝이는 목숨이라면</span>", isChant: true },
+  { time: 14.5, text: "出会いと別れを<br><span class='sub-lyric'>데아이토 와카레오<br>만남과 이별을</span>", isChant: true },
+  { time: 18.5, text: "繰り返す日々の中で<br><span class='sub-lyric'>쿠리카에스 히비노 나카데<br>반복하는 나날 속에서</span>", isChant: true },
+  { time: 22.0, text: "一体全体何を信じればいい?<br><span class='sub-lyric'>잇타이 젠타이 나니오 신지레바 이이<br>도대체 뭘 믿으면 돼?</span>", isChant: true  },
+      { time: 30.3, text: "🎵 (어이 어이 해도 되고 안해도 되고)", isChant: false },
+  { time: 41.5, text: "生まれ落ちたその時には 泣き喚いていた<br><span class='sub-lyric'>우마레 오치타 소노 토키니와 나키와메이테이타<br>태어난 그 순간에는 울부짖고 있었어</span>", isChant: false },
+  { time: 45.8, text: "奪われないように くたばらないように<br><span class='sub-lyric'>우바와레나이요오니 쿠타바라나이요오니<br>빼앗기지 않게 지쳐 나가떨어지지 않게</span>", isChant: false },
+  { time: 49.0, text: "生きるのが精一杯だ<br><span class='sub-lyric'>이키루노가 세이잇파이다<br>사는 게 고작이야</span>", isChant: false },
+  { time: 52.3, text: "胸に刺さったナイフを抜けずにいるの<br><span class='sub-lyric'>무네니 사삿타 나이후오 누케즈니 이루노<br>심장에 꽂힌 나이프를 빼지 못하고 있어</span>", isChant: false },
+  { time: 57.0, text: "抜いたその瞬間 飛沫を上げて<br><span class='sub-lyric'>누이타 소노 슌칸 시부키오 아게테<br>빼는 그 순간 물보라를 일으키며</span>", isChant: false },
+  { time: 60.5, text: "涙が噴き出すでしょう?<br><span class='sub-lyric'>나미다가 후키다스데쇼<br>눈물이 뿜어져 나오는 거겠지?</span>", isChant: false },
+  { time: 66.0, text: "溢れ出した涙のように<br><span class='sub-lyric'>아후레다시타 나미다노요오니<br>흘러넘친 눈물처럼</span>", isChant: true },
+  { time: 70.0, text: "一時の煌めく命ならば<br><span class='sub-lyric'>히토토키노 키라메쿠 이노치나라바<br>한순간의 반짝이는 목숨이라면</span>", isChant: true },
+  { time: 76.8, text: "出会いと別れを繰り返す日々の中で<br><span class='sub-lyric'>데아이토 와카레오 쿠리카에스 히비노 나카데<br>만남과 이별을 반복하는 나날 속에서</span>", isChant: true },
+  { time: 83.3, text: "一体全体何を信じればいい?<br><span class='sub-lyric'>잇타이 젠타이 나니오 신지레바 이이<br>도대체 뭘 믿으면 돼?</span>", isChant: true },
+      { time: 88.0, text: "🎵 (어이 어이 해도 되고 안해도 되고)", isChant: false },
+  { time: 99.0, text: "屈託のない笑顔の裏 隠していた<br><span class='sub-lyric'>켓타쿠노 나이 에가오노 우라 카쿠시테이타<br>태평한 웃음 뒤에 감추고 있었어</span>", isChant: false },
+  { time: 103.7, text: "生きるための嘘が<br><span class='sub-lyric'>이키루타메노 우소가<br>살기 위한 거짓말이</span>", isChant: false },
+  { time: 105.8, text: "最早本当か嘘か分からなくて<br><span class='sub-lyric'>모하야 혼토카 우소카 와카라나쿠테<br>이제는 진짜인지 거짓인지 모르겠어서</span>", isChant: false },
+  { time: 110.2, text: "自分の居場所でさえも見失っているの<br><span class='sub-lyric'>지분노 이바쇼데사에모 미우시낫테이루노<br>자신이 있을 곳 마저도 잃어버리고 있어</span>", isChant: false },
+  { time: 115.3, text: "怒りに飲まれて 光に憧れて<br><span class='sub-lyric'>이카리니 노마레테 히카리니 아코가레테<br>분노에 삼켜지면서도 빛을 동경하는</span>", isChant: false },
+  { time: 118.3, text: "今日も空を眺めるのでしょう<br><span class='sub-lyric'>쿄오모 소라오 나가메루노데쇼<br>오늘도 하늘을 바라보는 거겠죠</span>", isChant: false },
+  { time: 125.8, text: "この人生に意味があるのなら<br><span class='sub-lyric'>코노 진세이니 이미가 아루노나라<br>이런 인생도 의미가 있는 거라면</span>", isChant: true },
+  { time: 131.0, text: "教えてよ 脆く 儚い日々の中で<br><span class='sub-lyric'>오시에테요 모로쿠 하카나이 히비노 나카데<br>알려줘 약하고 덧없는 나날 속에서</span>", isChant: true },
+  { time: 137.5, text: "痛みや悲しみさえも<br><span class='sub-lyric'>이타미야 카나시미사에모<br>아픔이나 슬픔 마저도</span>", isChant: true },
+  { time: 141.0, text: "飲み干した今 僕らは<br><span class='sub-lyric'>노미호시타 이마 보쿠라와<br>전부 마셔버린 지금 우리들은</span>", isChant: true },
+  { time: 144.0, text: "一体全体何を信じればいい?<br><span class='sub-lyric'>잇타이 젠타이 나니오 신지레바 이이?<br>도대체 뭘 믿으면 돼?</span>", isChant: true },
+  { time: 148.8, text: "溢れ出した涙のように<br><span class='sub-lyric'>아후레다시타 나미다노요오니<br>흘러넘친 눈물처럼</span>", isChant: true },
+  { time: 153.5, text: "一時の煌めく命ならば<br><span class='sub-lyric'>히토토키노 키라메쿠 이노치나라바<br>한순간의 반짝이는 목숨이라면</span>", isChant: true },
+  { time: 159.8, text: "出会いと別れを繰り返す日々の中で<br><span class='sub-lyric'>데아이토 와카레오 쿠리카에스 히비노 나카데<br>만남과 이별을 반복하는 나날 속에서</span>", isChant: true },
+  { time: 165.8, text: "一体全体何を信じればいい?<br><span class='sub-lyric'>잇타이 젠타이 나니오 신지레바 이이<br>도대체 뭘 믿으면 돼?</span>", isChant: true }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
