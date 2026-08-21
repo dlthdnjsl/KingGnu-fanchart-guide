@@ -42,24 +42,26 @@
       margin-bottom: 16px;
     }
 
-    .back-btn {
+  .back-btn {
       color: #a0a0ab;
       text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 1.1rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 6px 12px;
-      border-radius: 8px;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
 
     .back-btn:hover {
       color: #fff;
       border-color: var(--chant-color);
+      transform: translateX(-2px);
     }
 
     .page-title {
@@ -143,11 +145,11 @@
 </head>
 <body>
 
-  <!-- 상단 뒤로가기 및 제목 -->
+ <!-- 상단 헤더 & '←' 뒤로가기 버튼 -->
   <div class="top-bar">
-    <a href="index.html" class="back-btn"> ← </a>
-    <div class="page-title">AIZO</div>
-    <div style="width: 70px;"></div>
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">곡 제목</div>
+    <div style="width: 38px;"></div>
   </div>
 
   <!-- 유튜브 동영상 영역 -->
