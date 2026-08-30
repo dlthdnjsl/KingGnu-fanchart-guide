@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - 逆夢 (역몽)</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* 상단 헤더 & '←' 뒤로가기 버튼 */
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* 유튜브 플레이어 박스 */
+    .player-wrapper {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 가사 스크롤 영역 */
+    .lyrics-wrapper {
+      width: 100%;
+      max-width: 560px;
+      height: 52vh;
+      min-height: 280px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 12px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .lyric-line {
+      padding: 10px 12px;
+      margin: 4px 0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #8a8a98;
+      font-weight: 400;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
+
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 뒤로가기 및 제목 -->
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">逆夢 (역몽)</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <!-- 유튜브 동영상 영역 -->
+  <div class="player-wrapper">
+    <div id="player"></div>
+  </div>
+
+  <!-- 가사 스크롤 영역 -->
+  <div class="lyrics-wrapper" id="lyricsContainer"></div>
+
+  <script>
+    // King Gnu - 逆夢 공식 MV 유튜브 ID
+    const YOUTUBE_VIDEO_ID = 'M6gcoDN9jBc'; 
+
+    // 가사 객체 형식 예시 (최대 4줄 규격)
+    const lyricsData = [
+      { time: 0.0, text: "あなたが望むなら どこまででも<br><span class='sub-lyric'>아나타가 노조무나라 도코마데데모<br>당신이 바란다면 어디까지라도</span>", isChant: false },
+      { time: 0.0, text: "抱きしめて 行くよ<br><span class='sub-lyric'>다키시메테 유쿠요<br>끌어안고 갈게</span>", isChant: false }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
