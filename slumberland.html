@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - Slumberland</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .player-wrapper {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    .lyrics-wrapper {
+      width: 100%;
+      max-width: 560px;
+      height: 52vh;
+      min-height: 280px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 12px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .lyric-line {
+      padding: 10px 12px;
+      margin: 4px 0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #8a8a98;
+      font-weight: 400;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
+
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">Slumberland</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <div class="player-wrapper">
+    <div id="player"></div>
+  </div>
+
+  <div class="lyrics-wrapper" id="lyricsContainer"></div>
+
+  <script>
+    const YOUTUBE_VIDEO_ID = '2VGccqqO6-A'; 
+
+    const lyricsData = [
+  { time: 4.7, text: "Wake up, wake up, wake up, daydream", isChant: true },
+  { time: 13.8, text: "Wake up, wake up, wake up, daydream", isChant: true },
+  { time: 23.0, text: "Wake up, wake up, wake up, daydream", isChant: true },
+  { time: 32.3, text: "Wake up, wake up, wake up, daydream", isChant: true },
+  { time: 41.0, text: "TVステーションでは今日も<br><span class='sub-lyric'>테레비 스테숀데와 쿄모<br>TV 방송국에서는 오늘도</span>", isChant: false },
+  { time: 43.0, text: "騒ぎ立てているコメンテーター<br><span class='sub-lyric'>사와기 타테테이루 코멘테타<br>소란피우고 있는 코멘테이터</span>", isChant: false },
+  { time: 45.3, text: "耳障りで狂言めいた<br><span class='sub-lyric'>미미자와리데 쿄겐메이타<br>귀에 거슬리는 농담처럼</span>", isChant: false },
+  { time: 48.0, text: "遠い世界の話ばかりだな<br><span class='sub-lyric'>토오이 세카이노 하나시바카리다나<br>먼 세상의 이야기 뿐이네</span>", isChant: false },
+  { time: 49.8, text: "正義もヘッタクレもない<br><span class='sub-lyric'>세이기모 헷타크레모 나이<br>정의도 뭣도 없어</span>", isChant: false },
+  { time: 52.7, text: "悪事も結託すりゃバレないな<br><span class='sub-lyric'>아쿠지모 켓타쿠스랴 바레나이나<br>나쁜 짓도 결탁하면 걸리지 않잖아</span>", isChant: false },
+  { time: 55.0, text: "甘い蜜だけを吸っていたい<br><span class='sub-lyric'>아마이 미츠다케오 슷테이타이<br>달디단 꿀만을 마시고 싶어</span>", isChant: false },
+  { time: 57.0, text: "薄っぺらいピエロはあっちへ行きな<br><span class='sub-lyric'>우슷페라이 피에로와 앗치에 유키나<br>경박한 피에로는 저쪽으로 가렴</span>", isChant: false },
+  { time: 59.7, text: "Wake up people in Tokyo daydream", isChant: true },
+  { time: 64.0, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 65.8, text: "Rock'n roller sing only 'bout love and life", isChant: false },
+  { time: 68.7, text: "Wake up people in Tokyo daydream", isChant: true },
+  { time: 72.8, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 74.8, text: "It could be the start of something new tonight (tonight)", isChant: false },
+  { time: 78.7, text: "Wake up, wake up, wake up, daydream", isChant: true },
+  { time: 87.7, text: "ド派手に着飾ればセンセーション​<br><span class='sub-lyric'>도하데니 키카자레바 센세숀<br>아주 화려하게 꾸민다면 센세이션</span>", isChant: false },
+  { time: 89.3, text: "中身二の次 TVステーション<br><span class='sub-lyric'>나카미니노 츠기 테레비 스테이숀<br>내용은 뒷전인 TV 방송국</span>", isChant: false },
+  { time: 91.5, text: "すっからかんなセレブレーション<br><span class='sub-lyric'>슷카라칸나 세레브레숀<br>텅 빈 축하</span>", isChant: false },
+  { time: 93.2, text: "素っ裸で今夜のシュミレーション<br><span class='sub-lyric'>슷하다카데 콘야노 시뮤레숀<br>숨김없는 오늘의 시뮬레이션</span>", isChant: false },
+  { time: 95.8, text: "正直者は馬鹿をみる<br><span class='sub-lyric'>쇼지키모노와 바카오 미루<br>정직한 사람은 손해를 봐</span>", isChant: false },
+  { time: 97.8, text: "ディスるだけのアンチヒーローを射る<br><span class='sub-lyric'>디스루다케노 안치히로오 이루<br>욕할 뿐인 안티히어로를 쏴</span>", isChant: false },
+  { time: 100.8, text: "私腹を肥やす足長親父<br><span class='sub-lyric'>시후쿠오 코야스 아시나가오야지<br>사리사욕을 채우는 나쁜 어른들</span>", isChant: false },
+  { time: 102.7, text: "子供を騙してはメイクマニー<br><span class='sub-lyric'>코도모오 다마시테와 메이크마니<br>아이들을 속이고 버는 돈</span>", isChant: false },
+  { time: 105.0, text: "​Wake up people in Tokyo daydream", isChant: true },
+  { time: 109.7, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 111.8, text: "Rock'n roller sing only 'bout love and life", isChant: false },
+  { time: 114.7, text: "Wake up people in Tokyo daydream", isChant: true },
+  { time: 158.8, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 120.7, text: "It could be the start of something new tonight", isChant: true },
+  { time: 124.5, text: "擦れて溶けたビロード<br><span class='sub-lyric'>스레테 토케타 비로도<br>닳아 녹아버린 벨벳</span>", isChant: false },
+  { time: 126.5, text: "からは露わ傷を披露<br><span class='sub-lyric'>카라와 아라와 키즈오 히로<br>거기서 드러난 상처를 내보여</span>", isChant: false },
+  { time: 127.5, text: "けれど血は出ぬ我が身<br><span class='sub-lyric'>케레도 치와 데누 와가미<br>하지만 피는 나오지 않는 나의 몸</span>", isChant: false },
+  { time: 129.7, text: "中身が空っぽの強み 伴う痛み<br><span class='sub-lyric'>나카미가 카랏포노 츠요미 토모나우 이타미<br>보잘것없는 강함에 동반되는 아픔</span>", isChant: false },
+  { time: 132.7, text: "来た道 振り返り生まれる弱み<br><span class='sub-lyric'>키타미치 후리카에리 우마레루 요와미<br>걸어온 길을 돌아보면 생기는 약점</span>", isChant: false },
+  { time: 135.7, text: "寄せては返す人の波<br><span class='sub-lyric'>요세테와 카에스 히토노 나미<br>밀려왔다가 다시 빠져나가는 인파</span>", isChant: false },
+  { time: 138.5, text: "それでも繰り返す日々の営み<br><span class='sub-lyric'>소레데모 쿠리카에스 히비노 이토나미<br>그래도 반복하는 매일의 할일</span>", isChant: false },
+  { time: 141.7, text: "擦れて溶けたビロード<br><span class='sub-lyric'>스레테 토케타 비로도<br>닳아 녹아버린 벨벳</span>", isChant: false },
+  { time: 143.5, text: "見事に露わ傷を披露<br><span class='sub-lyric'>미고토니 아라와 키즈오 히로<br>완전히 드러난 상처를 내보여</span>", isChant: false },
+  { time: 145.7, text: "けれど血は出ぬ我が身<br><span class='sub-lyric'>케레도 치와 데누 와가미<br>하지만 피는 나오지 않는 나의 몸</span>", isChant: false },
+  { time: 147.5, text: "中身が空っぽのお詫び<br><span class='sub-lyric'>나카미가 카랏포노 오와비<br>아무런 의미도 없는 사과</span>", isChant: false },
+  { time: 148.8, text: "のらりくらり都会暮らし<br><span class='sub-lyric'>노라리 쿠라리 토카이 구라시<br>빈둥빈둥 보내는 도시생활</span>", isChant: false },
+  { time: 150.7, text: "Wake up people in Tokyo daydream", isChant: true },
+  { time: 155.5, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 157.0, text: "Rock 'n' roller sing only 'bout love and life", isChant: false },
+  { time: 159.7, text: "Wake up people in Tokyo daydream", isChant: true },
+  { time: 164.5, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 166.3, text: "It could be the start of something new tonight, yeah", isChant: false },
+  { time: 168.5, text: "Wake up people in Tokyo daydream", isChant: true },
+  { time: 173.5, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 175.7, text: "Rock 'n' roller sing only 'bout love and life", isChant: false },
+  { time: 178.0, text: "Wake up people in Tokyo daydream", isChant: true },
+  { time: 183.0, text: "Open your eyes, open eyes wide", isChant: false },
+  { time: 184.7, text: "It could be the start of something new tonight", isChant: false }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
