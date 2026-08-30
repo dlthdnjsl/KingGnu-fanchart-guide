@@ -215,6 +215,13 @@
       color: var(--text-sub);
     }
 
+    /* 카드 우측 영역 (뱃지 + 화살표) */
+    .card-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .badge-chant {
       font-size: 0.72rem;
       font-weight: 600;
@@ -224,6 +231,19 @@
       border-radius: 20px;
       border: 1px solid rgba(255, 71, 87, 0.3);
       white-space: nowrap;
+    }
+
+    /* 이동 표시 화살표 */
+    .arrow-icon {
+      color: #666675;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .song-card:hover .arrow-icon {
+      color: var(--accent-color);
+      transform: translateX(3px);
     }
 
     footer {
@@ -418,7 +438,10 @@
             <div class="song-title">${song.title}</div>
             <div class="song-album">${song.album}</div>
           </div>
-          ${badgeHtml}
+          <div class="card-right">
+            ${badgeHtml}
+            <span class="arrow-icon">›</span>
+          </div>
         `;
         songListEl.appendChild(card);
       });
