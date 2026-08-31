@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - SO BAD</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .player-wrapper {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    .lyrics-wrapper {
+      width: 100%;
+      max-width: 560px;
+      height: 52vh;
+      min-height: 280px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 12px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .lyric-line {
+      padding: 10px 12px;
+      margin: 4px 0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #8a8a98;
+      font-weight: 400;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
+
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">SO BAD</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <div class="player-wrapper">
+    <div id="player"></div>
+  </div>
+
+  <div class="lyrics-wrapper" id="lyricsContainer"></div>
+
+  <script>
+    const YOUTUBE_VIDEO_ID = 'jTJsm9msHGU'; 
+
+    const lyricsData = [
+     { time: 0.0, text: "Oh, King Gnu is dead", isChant: false },
+  { time: 0.0, text: "But the king is not", isChant: false },
+  { time: 0.0, text: "Because it's you​", isChant: false },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "今世どう成ろうと<br><span class='sub-lyric'>콘세이 도오 나로오토<br>이번 생이 어떻게 되든</span>", isChant: false },
+  { time: 0.0, text: "(今世どう成ろうと)<br><span class='sub-lyric'>(콘세이 도오 나로오토)<br>(이번 생이 어떻게 되든)</span>", isChant: true },
+  { time: 0.0, text: "一蓮托生よ<br><span class='sub-lyric'>이치렌타쿠쇼요<br>끝까지 운명과 함께하는 거야</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "憂いなどは無用<br><span class='sub-lyric'>우레이 나도와 무요<br>걱정은 쓸데없어</span>", isChant: false },
+  { time: 0.0, text: "(憂いなどは無用)<br><span class='sub-lyric'>(우레이 나도와 무요)<br>(걱정은 쓸데없어)</span>", isChant: true },
+  { time: 0.0, text: "この人生劇場<br><span class='sub-lyric'>코노 진세이 게키죠<br>이 인생극장에서</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "よそはよそ うちはうち<br><span class='sub-lyric'>요소와 요소 우치와 우치<br>그쪽은 그쪽 우리는 우리</span>", isChant: false },
+  { time: 0.0, text: "メタは外 鬼は内<br><span class='sub-lyric'>메타와 소토 오니와 우치<br>가식은 버리고 몸에 귀신을 들여</span>", isChant: false },
+  { time: 0.0, text: "ロクデナシの正義はお呼びじゃない<br><span class='sub-lyric'>로크데나시노 세이기와 오요비쟈나이<br>쓰레기의 정의는 필요없어</span>", isChant: false },
+  { time: 0.0, text: "学ばぬ争いの歴史<br><span class='sub-lyric'>마나바누 아라소이노 레키시<br>배우는 게 없는 싸움의 역사</span>", isChant: false },
+  { time: 0.0, text: "サイテーの友達とほったらかし夜の始まり<br><span class='sub-lyric'>사이테노 토모다치토 홋타라카시 요루노 하지마리<br>최악의 친구와 함께 전부 내팽겨친 밤의 시작</span>", isChant: false },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "涙が溢れそう<br><span class='sub-lyric'>나미다가 코보레소오<br>눈물이 흐를 거 같아</span>", isChant: false },
+  { time: 0.0, text: "(涙が溢れそう)<br><span class='sub-lyric'>나미다가 코보레소오<br>눈물이 흐를 거 같아</span>", isChant: true },
+  { time: 0.0, text: "いつの日からだろう<br><span class='sub-lyric'>이츠노 히카라다로오<br>언제부터였을까</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "夢遙か蜃気楼<br><span class='sub-lyric'>유메 하루카 신키로<br>꿈은 저 멀리 있는 신기루</span>", isChant: false },
+  { time: 0.0, text: "(夢遙か蜃気楼)<br><span class='sub-lyric'>(유메 하루카 신키로)<br>(꿈은 저 멀리 있는 신기루)</span>", isChant: true },
+  { time: 0.0, text: "この人生劇場<br><span class='sub-lyric'>코노 진세이 게키죠<br>이 인생극장에서</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "まつくろなたいよう<br><span class='sub-lyric'>맛쿠로나 타이요오<br>새까만 태양</span>", isChant: false },
+  { time: 0.0, text: "かげろうゆらゆらゆれるとうきやう<br><span class='sub-lyric'>카게로오 유라유라 유레루 토쿄<br>아지랑이가 하늘하늘 흔들리는 도쿄</span>", isChant: false },
+  { time: 0.0, text: "いふほどわるくないわ<br><span class='sub-lyric'>유우호도 와루쿠 나이와<br>말한 것 만큼 나쁘지 않아</span>", isChant: false },
+  { time: 0.0, text: "さあえんどろーるであいませう<br><span class='sub-lyric'>사아 엔도로루데 아이마쇼오<br>그럼 엔드롤에서 만나요</span>", isChant: false },
+  { time: 0.0, text: "よそはよそ うちはうち<br><span class='sub-lyric'>요소와 요소 우치와 우치<br>그쪽은 그쪽 우리는 우리</span>", isChant: false },
+  { time: 0.0, text: "沈みゆくこの國<br><span class='sub-lyric'>시즈미 유쿠 코노 쿠니<br>가라앉아 가는 이 나라</span>", isChant: false },
+  { time: 0.0, text: "狂わせる蜘蛛の糸<br><span class='sub-lyric'>쿠루와세루 쿠모노 이토<br>미치게 만드는 거미줄</span>", isChant: false },
+  { time: 0.0, text: "蚊帳の外 常日頃<br><span class='sub-lyric'>카야노 소토 츠네히고로<br>언제나 관심 밖</span>", isChant: false },
+  { time: 0.0, text: "絵空事の政治<br><span class='sub-lyric'>에소라고토노 마츠리고토<br>거짓된 정치</span>", isChant: false },
+  { time: 0.0, text: "ほったらかし夜の始まり<br><span class='sub-lyric'>홋타라카시 요루노 하지마리<br>전부 내팽겨친 밤의 시작</span>", isChant: false },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "今世どう成ろうと<br><span class='sub-lyric'>콘세이 도오 나로오토<br>이번 생이 어떻게 되든</span>", isChant: false },
+  { time: 0.0, text: "(今世どう成ろうと)<br><span class='sub-lyric'>(콘세이 도오 나로오토)<br>(이번 생이 어떻게 되든)</span>", isChant: true },
+  { time: 0.0, text: "一蓮托生よ<br><span class='sub-lyric'>이치렌타쿠쇼요<br>끝까지 운명과 함께하는 거야</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "最悪で最高♡<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: false },
+  { time: 0.0, text: "(最悪で最高♡)<br><span class='sub-lyric'>(사이아쿠데 사이코)<br>(최악이자 최고)</span>", isChant: true },
+  { time: 0.0, text: "憂いなどは無用<br><span class='sub-lyric'>우레이 나도와 무요<br>걱정은 쓸데 없어</span>", isChant: false },
+  { time: 0.0, text: "(憂いなどは無用)<br><span class='sub-lyric'>(우레이 나도와 무요)<br>(걱정은 쓸데 없어)</span>", isChant: true },
+  { time: 0.0, text: "この人生劇場<br><span class='sub-lyric'>코노 진세이 게키죠<br>이 인생극장에서</span>", isChant: true },
+  { time: 0.0, text: "​最悪で最高<br><span class='sub-lyric'>사이아쿠데 사이코<br>최악이자 최고</span>", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THAT SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO, I WANT THAT SO", isChant: true },
+  { time: 0.0, text: "何もかも SO BAD<br><span class='sub-lyric'>나니모카모 SO BAD<br>전부 SO BAD</span>", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THAT SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO, I WANT THAT SO", isChant: true },
+  { time: 0.0, text: "綺麗事は SO BAD<br><span class='sub-lyric'>키레이고토와 SO BAD<br>겉치레는 SO BAD</span>", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THAT SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO, I WANT THAT SO", isChant: true },
+  { time: 0.0, text: "I WANT THAT SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THAT SO BAD", isChant: true },
+  { time: 0.0, text: "I WANT THIS SO, I WANT THAT SO", isChant: true },
+  { time: 0.0, text: "I WANT THAT SO", isChant: true },
+  { time: 0.0, text: "SO BAD", isChant: true }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
