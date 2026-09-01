@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - Sorrows</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* 상단 헤더 & '←' 뒤로가기 버튼 */
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    /* 유튜브 플레이어 박스 */
+    .player-wrapper {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 가사 스크롤 영역 */
+    .lyrics-wrapper {
+      width: 100%;
+      max-width: 560px;
+      height: 52vh;
+      min-height: 280px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 12px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .lyric-line {
+      padding: 10px 12px;
+      margin: 4px 0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #8a8a98;
+      font-weight: 400;
+      display: block;
+      margin-top: 3px;
+      transition: color 0.2s;
+    }
+
+    /* 일반 가사 활성화 */
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    /* 떼창 가사 기본 스타일 */
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    /* 떼창 가사 활성화 스타일 */
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">Sorrows</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <div class="player-wrapper">
+    <div id="player"></div>
+  </div>
+
+  <div class="lyrics-wrapper" id="lyricsContainer"></div>
+
+  <script>
+    // YouTube Video ID (https://youtu.be/vNoJ-bAvcMc)
+    const YOUTUBE_VIDEO_ID = 'vNoJ-bAvcMc'; 
+
+    // 가사 데이터 구조 예시
+    const lyricsData = [
+  { time: 0.5, text: "Sorrows", isChant: false },
+  { time: 3.0, text: "🎵", isChant: false },
+  { time: 19.7, text: "👏優しい嘘をついてくれよ 現実は残酷だもの<br><span class='sub-lyric'>야사시이 우소오 츠이테 쿠레요 겐지츠와 잔코쿠다모노<br>상냥한 거짓말을 해줘 현실은 잔혹하니까</span>", isChant: false },
+  { time: 25.8, text: "👏酔いどれ踊れ 全てを忘れるまで 強がり笑うだけ<br><span class='sub-lyric'>요이도레 오도레 스베테오 와스레루마데 츠요가리 와라우다케<br>잔뜩 취해 춤을 추고 전부 잊을 때까지 강한 척하며 웃을뿐</span>", isChant: false },
+  { time: 32.8, text: "Why don't you come back to me?", isChant: true },
+  { time: 37.0, text: "避けようのない痛みを 二人分け合えるよ<br><span class='sub-lyric'>사케요노나이 이타미오 후타리 와케아에루요<br>피할 수 없는 아픔을 둘이서 나눠가질 수 있어</span>", isChant: false },
+  { time: 45.6, text: "Cause I know you're lonely like me", isChant: true },
+  { time: 50.0, text: "こびり付いた悲しみを 拭い去れるの?<br><span class='sub-lyric'>코비리 츠이타 카나시미오 누구이사레루노<br>사라지지 않는 슬픔을 씻어낼 수는 있는 거야?</span>", isChant: false },
+  { time: 58.7, text: "Sorrows", isChant: true },
+  { time: 60.0, text: "🎵", isChant: false },
+  { time: 72.0, text: "👏流離え友よ 生まれては死ぬだけの輪廻の中を<br><span class='sub-lyric'>사스라에 토모요 우마레테와 시누다케노 린네노 나카오<br>친구여 태어나서 죽을 뿐인 윤회의 안에서 방랑해봐</span>", isChant: false },
+  { time: 78.7, text: "👏終わりのない旅路を進め<br><span class='sub-lyric'>오와리노나이 타비지오 스스메<br>끝이 없는 여행을 계속해</span>", isChant: false },
+  { time: 81.5, text: "👏夜が明けるまで 奥歯を食いしばって<br><span class='sub-lyric'>요가 아케루마데 오쿠바오 쿠이시밧테<br>날이 밝을때까지 어금니를 꽉 꺠물고</span>", isChant: false },
+  { time: 86.0, text: "​Why don't you come back to me?", isChant: true },
+  { time: 90.0, text: "ささやかな喜びを 二人分け合えるよ<br><span class='sub-lyric'>사사야카나 요로코비오 후타리 와케아에루요<br>사소한 기쁨도 둘이서 나눠가질 수 있어</span>", isChant: false },
+  { time: 98.3, text: "Cause I know you're lonely like me", isChant: true },
+  { time: 102.8, text: "この溢れ出す思いを 伝えに行くよ<br><span class='sub-lyric'>코노 아후레다스 오모이오 츠타에니 이쿠요<br>이 넘쳐흐르는 마음을 전하러 갈게</span>", isChant: false },
+  { time: 111.8, text: "Sorrows", isChant: true },
+  { time: 113.3, text: "Every time I feel as one, sometime we feel as one", isChant: true },
+  { time: 119.8, text: "ささやかな人生を 愛せるのならば<br><span class='sub-lyric'>사사야카나 진세이오 아이세루노나라바<br>대단할 것 없는 인생을 사랑할 수 있다면</span>", isChant: false },
+  { time: 126.0, text: "Every time I feel as one, sometime we feel as one", isChant: true },
+  { time: 132.0, text: "信じていたもの全てを 手放したっていいんだ<br><span class='sub-lyric'>신지테이타모노 스베테오 테바나시탓테 이인다<br>믿고 있던 모든 걸 놓아버린다고 해도 괜찮아</span>", isChant: false },
+  { time: 140.5, text: "​You always stay in my mind", isChant: true },
+  { time: 152.0, text: "I want you stay in your mind", isChant: true },
+  { time: 165.3, text: "​Why don't you come back to me?", isChant: true },
+  { time: 168.8, text: "この素晴らしき世界を 二人分け合えるよ<br><span class='sub-lyric'>코노 스바라시키 세카이오 후타리 와케아에루요<br>이 멋진 세상을 둘이서 나눠가질 수 있어</span>", isChant: false },
+  { time: 177.8, text: "Cause I know you're lonely like me", isChant: true },
+  { time: 181.8, text: "この胸の苦しみと 共に生きてゆくよ<br><span class='sub-lyric'>코노 무네노 쿠루시미토 토모니 이키테유쿠요<br>마음 속의 괴로움과 함께 살아갈게</span>", isChant: false },
+  { time: 190.8, text: "Sorrows", isChant: true },
+  { time: 192.3, text: "🎵", isChant: false }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
