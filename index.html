@@ -4,15 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>King Gnu Live Chant Guide</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-color: #0f0f12;
-      --card-bg: #18181c;
-      --card-hover: #23232a;
+      --bg-color: #0d0d10;
+      --card-bg: #16161b;
+      --card-hover: #1f1f26;
       --accent-color: #ff4757;
       --text-main: #ffffff;
-      --text-sub: #a0a0ab;
-      --border-color: #2a2a35;
+      --text-sub: #9494a0;
+      --border-color: #262633;
     }
 
     * {
@@ -23,61 +28,77 @@
 
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      /* 상단에 은은한 다크레드 방사형 그라디언트 적용 */
       background-color: var(--bg-color);
+      background-image: radial-gradient(circle at 50% 0%, #2a1216 0%, #0d0d10 65%);
+      background-repeat: no-repeat;
       color: var(--text-main);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding: 32px 16px;
+      padding: 36px 16px 40px;
     }
 
+    /* 헤더 타이포그래피 */
     header {
       text-align: center;
       margin-bottom: 24px;
     }
 
     header h1 {
-      font-size: clamp(1.35rem, 5.5vw, 1.8rem);
-      font-weight: 800;
+      font-family: 'Montserrat', 'Pretendard', sans-serif;
+      font-size: clamp(1.4rem, 6vw, 2.1rem);
+      font-weight: 900;
       letter-spacing: -0.5px;
       margin-bottom: 6px;
       white-space: nowrap;
+      text-transform: uppercase;
     }
 
     header h1 span {
       color: var(--accent-color);
+      text-shadow: 0 0 16px rgba(255, 71, 87, 0.4);
     }
 
     header p {
       color: var(--text-sub);
       font-size: 0.9rem;
+      letter-spacing: -0.3px;
     }
 
-    /* 전곡 MV 연속 감상 (STATION) 섹션 */
-    .station-section {
+    /* 전곡 MV 연속 감상 (STATION) 아코디언 섹션 */
+    .station-accordion {
       width: 100%;
       max-width: 600px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
     }
 
-    .station-header {
+    .station-accordion:hover {
+      border-color: #383848;
+    }
+
+    .station-toggle-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      cursor: pointer;
+      color: var(--text-main);
+      font-family: inherit;
     }
 
     .station-title {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
-      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 6px;
@@ -85,21 +106,47 @@
 
     .station-title span {
       color: var(--accent-color);
+      font-size: 0.75rem;
+    }
+
+    .station-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .station-tag {
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--text-sub);
-      background-color: rgba(255, 255, 255, 0.06);
-      padding: 3px 8px;
-      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    .station-arrow {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      transition: transform 0.25s ease;
+    }
+
+    .station-arrow.open {
+      transform: rotate(180deg);
+    }
+
+    .station-body {
+      display: none;
+      padding: 0 14px 14px;
+    }
+
+    .station-body.open {
+      display: block;
     }
 
     .station-player-wrapper {
       width: 100%;
       aspect-ratio: 16 / 9;
-      max-height: 200px;
-      border-radius: 10px;
+      max-height: 220px;
+      border-radius: 8px;
       overflow: hidden;
       border: 1px solid var(--border-color);
     }
@@ -111,25 +158,26 @@
       display: block;
     }
 
+    /* 컨트롤러 (검색 & 정렬) */
     .controls-wrapper {
       width: 100%;
       max-width: 600px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       margin-bottom: 20px;
     }
 
     .search-box input {
       width: 100%;
-      padding: 10px 16px;
+      padding: 11px 16px;
       border-radius: 10px;
       border: 1px solid var(--border-color);
       background-color: var(--card-bg);
       color: var(--text-main);
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s ease;
     }
 
     .search-box input:focus {
@@ -144,17 +192,16 @@
     }
 
     .sort-btn {
-      padding: 7px 4px;
-      border-radius: 16px;
+      padding: 8px 4px;
+      border-radius: 18px;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
       color: var(--text-sub);
-      font-size: clamp(0.7rem, 2.7vw, 0.82rem);
+      font-size: clamp(0.72rem, 2.7vw, 0.83rem);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
       white-space: nowrap;
       transition: all 0.2s ease;
       user-select: none;
@@ -162,22 +209,23 @@
 
     .sort-btn:hover {
       color: var(--text-main);
-      border-color: #444455;
+      border-color: #404050;
     }
 
     .sort-btn.active {
-      background-color: rgba(255, 71, 87, 0.15);
+      background-color: rgba(255, 71, 87, 0.12);
       border-color: var(--accent-color);
       color: var(--accent-color);
-      font-weight: 600;
+      font-weight: 700;
     }
 
+    /* 곡 카드 리스트 */
     .song-grid {
       width: 100%;
       max-width: 600px;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .song-card {
@@ -186,12 +234,20 @@
       justify-content: space-between;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 16px 20px;
+      border-left: 3.5px solid #444455; /* 기본 좌측 컬러 바 */
+      border-radius: 12px;
+      padding: 15px 18px;
       text-decoration: none;
       color: inherit;
       transition: all 0.2s ease;
     }
+
+    /* 앨범별 시그니처 좌측 컬러 포인트 */
+    .song-card.album-tokyo { border-left-color: #636e72; }
+    .song-card.album-sympa { border-left-color: #e17055; }
+    .song-card.album-ceremony { border-left-color: #d63031; }
+    .song-card.album-greatest { border-left-color: #0984e3; }
+    .song-card.album-single { border-left-color: #a29bfe; }
 
     .song-card:hover {
       background-color: var(--card-hover);
@@ -202,24 +258,23 @@
     .song-info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     .song-title {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 700;
     }
 
     .song-album {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-sub);
     }
 
-    /* 카드 우측 영역 (뱃지 + 화살표) */
     .card-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     .badge-chant {
@@ -227,15 +282,14 @@
       font-weight: 600;
       color: var(--accent-color);
       background-color: rgba(255, 71, 87, 0.12);
-      padding: 5px 10px;
-      border-radius: 20px;
+      padding: 4px 8px;
+      border-radius: 12px;
       border: 1px solid rgba(255, 71, 87, 0.3);
       white-space: nowrap;
     }
 
-    /* 이동 표시 화살표 */
     .arrow-icon {
-      color: #666675;
+      color: #555566;
       font-size: 1rem;
       font-weight: 600;
       transition: transform 0.2s ease, color 0.2s ease;
@@ -253,11 +307,11 @@
       font-size: 0.8rem;
     }
   </style>
-  
+
   <meta property="og:title" content="King Gnu Live Chant Guide">
   <meta property="og:description" content="King Gnu 라이브 응원법 가이드">
   <meta property="og:image" content="https://kinggnu-fanchant-guide-kr.pages.dev/og-image.jpg">
-  
+
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://kinggnu-fanchant-guide-kr.pages.dev/og-image.jpg">
 </head>
@@ -268,231 +322,14 @@
     <p>킹누 라이브 떼창 가이드</p>
   </header>
 
-  <!-- 전곡 MV 연속 감상 (STATION) 미니 플레이어 -->
-  <div class="station-section">
-    <div class="station-header">
+  <div class="station-accordion">
+    <button class="station-toggle-btn" id="stationToggle">
       <div class="station-title">
         <span>▶</span> King Gnu MV STATION
       </div>
-      <div class="station-tag">24/7 Non-Stop MV</div>
-    </div>
-    <div class="station-player-wrapper">
-      <iframe 
-        src="https://www.youtube.com/embed/kXoE-5t8tzg?rel=0&modestbranding=1&playsinline=1" 
-        title="King Gnu - STATION" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-      </iframe>
-    </div>
-  </div>
-
-  <div class="controls-wrapper">
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="곡 제목 또는 앨범 검색...">
-    </div>
-
-    <div class="sort-container">
-      <button class="sort-btn active" id="btnSortName">이름순 ↑ (A-Z)</button>
-      <button class="sort-btn" id="btnSortYear">발매연도순 ↑ (과거순)</button>
-      <button class="sort-btn" id="btnSortAlbum">앨범순 ↑ (1집부터)</button>
-    </div>
-  </div>
-
-  <div class="song-grid" id="songList"></div>
-
-  <footer>
-    <p>© 2026 zzezzal. All rights reserved.</p>
-  </footer>
-
-  <script>
-    const songData = [
-      { title: "SPECIALZ", album: "THE GREATEST UNKNOWN", year: 2023, url: "specialz.html", badge: "🔥" },
-      { title: "Teenager Forever", album: "CEREMONY", year: 2020, url: "teenagerforever.html", badge: "🔥" },
-      { title: "Flash!!!", album: "Sympa", year: 2019, url: "flash.html", badge: "" },
-      { title: "雨燦々", album: "THE GREATEST UNKNOWN", year: 2022, url: "amesansan.html", badge: "🔥" },
-      { title: "Vinyl", album: "Tokyo Rendez-Vous", year: 2017, url: "vinyl.html", badge: "" },
-      { title: "AIZO", album: "주술회전 3기 OP", year: 2026, url: "aizo.html", badge: "🔥" },
-      { title: "一途", album: "THE GREATEST UNKNOWN", year: 2021, url: "ichizu.html", badge: "" },
-      { title: "逆夢", album: "THE GREATEST UNKNOWN", year: 2021, url: "sakayume.html", badge: "" },
-      { title: "飛行艇", album: "CEREMONY", year: 2019, url: "hikoutei.html", badge: "🔥" },
-      { title: "TWILIGHT!!!", album: "명탐정 코난: 흑철의 어영 ED", year: 2025, url: "twilight.html", badge: "" },
-      { title: "ねっこ", album: "", year: 2024, url: "nekko.html", badge: "" },
-      { title: "SO BAD", album: "유니버셜 스튜디오 좀비 데 댄스 콜라보 곡", year: 2024, url: "sobad.html", badge: "🔥" },
-      { title: "Prayer X", album: "Sympa", year: 2018, url: "prayerx.html", badge: "🔥" },
-      { title: "STARDOM", album: "THE GREATEST UNKNOWN", year: 2022, url: "stardom.html", badge: "" },
-      { title: "Slumberland", album: "Sympa", year: 2018, url: "slumberland.html", badge: "" },
-      { title: "Sorrows", album: "Sympa", year: 2019, url: "sorrows.html", badge: "" },
-      { title: "):阿修羅:(", album: "THE GREATEST UNKNOWN", year: 2023, url: "asura.html", badge: "" }
-    ];
-
-    let currentSortMode = "name-asc";
-
-    const songListEl = document.getElementById("songList");
-    const searchInput = document.getElementById("searchInput");
-    const btnSortName = document.getElementById("btnSortName");
-    const btnSortYear = document.getElementById("btnSortYear");
-    const btnSortAlbum = document.getElementById("btnSortAlbum");
-    const allButtons = [btnSortName, btnSortYear, btnSortAlbum];
-
-    const customJapaneseOrder = [
-      "):阿修羅:(",
-      "雨燦々",
-      "一途",
-      "逆夢",
-      "ねっこ",
-      "飛行艇"
-    ];
-
-    function getCharPriority(title) {
-      const firstChar = title.trim().charAt(0);
-      if (title.includes("阿修羅")) return 3;
-      if (/[a-zA-Z]/.test(firstChar)) return 1;
-      if (/[가-힣]/.test(firstChar)) return 2;
-      return 3;
-    }
-
-    function getAlbumPriority(album) {
-      const a = (album || "").toLowerCase();
-      if (a.includes("tokyo rendez-vous")) return 1;
-      if (a.includes("sympa")) return 2;
-      if (a.includes("ceremony")) return 3;
-      if (a.includes("greatest unknown")) return 4;
-      return 5;
-    }
-
-    function renderList() {
-      const query = searchInput.value.toLowerCase().trim();
-
-      let filtered = songData.filter(song => 
-        song.title.toLowerCase().includes(query) || 
-        song.album.toLowerCase().includes(query)
-      );
-
-      if (currentSortMode === "name-asc") {
-        filtered.sort((a, b) => {
-          const pA = getCharPriority(a.title);
-          const pB = getCharPriority(b.title);
-          if (pA !== pB) return pA - pB;
-
-          if (pA === 3) {
-            const idxA = customJapaneseOrder.indexOf(a.title);
-            const idxB = customJapaneseOrder.indexOf(b.title);
-            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-            if (idxA !== -1) return -1;
-            if (idxB !== -1) return 1;
-          }
-          return a.title.localeCompare(b.title, undefined, { sensitivity: 'base' });
-        });
-      } 
-      else if (currentSortMode === "name-desc") {
-        filtered.sort((a, b) => {
-          const pA = getCharPriority(a.title);
-          const pB = getCharPriority(b.title);
-          if (pA !== pB) return pB - pA;
-
-          if (pA === 3) {
-            const idxA = customJapaneseOrder.indexOf(a.title);
-            const idxB = customJapaneseOrder.indexOf(b.title);
-            if (idxA !== -1 && idxB !== -1) return idxB - idxA;
-            if (idxA !== -1) return 1;
-            if (idxB !== -1) return -1;
-          }
-          return b.title.localeCompare(a.title, undefined, { sensitivity: 'base' });
-        });
-      } 
-      else if (currentSortMode === "year-asc") {
-        filtered.sort((a, b) => a.year - b.year);
-      } 
-      else if (currentSortMode === "year-desc") {
-        filtered.sort((a, b) => b.year - a.year);
-      }
-      else if (currentSortMode === "album-asc") {
-        filtered.sort((a, b) => {
-          const pA = getAlbumPriority(a.album);
-          const pB = getAlbumPriority(b.album);
-          if (pA !== pB) return pA - pB;
-          return a.year - b.year || a.title.localeCompare(b.title);
-        });
-      }
-      else if (currentSortMode === "album-desc") {
-        filtered.sort((a, b) => {
-          const pA = getAlbumPriority(a.album);
-          const pB = getAlbumPriority(b.album);
-          if (pA !== pB) return pB - pA;
-          return b.year - a.year || a.title.localeCompare(b.title);
-        });
-      }
-
-      songListEl.innerHTML = "";
-      if (filtered.length === 0) {
-        songListEl.innerHTML = `<div style="text-align:center; color: var(--text-sub); padding: 40px 0;">검색 결과가 없습니다.</div>`;
-        return;
-      }
-
-      filtered.forEach(song => {
-        const card = document.createElement("a");
-        card.href = song.url;
-        card.className = "song-card";
-        const badgeHtml = song.badge ? `<span class="badge-chant">${song.badge}</span>` : "";
-
-        card.innerHTML = `
-          <div class="song-info">
-            <div class="song-title">${song.title}</div>
-            <div class="song-album">${song.album}</div>
-          </div>
-          <div class="card-right">
-            ${badgeHtml}
-            <span class="arrow-icon">›</span>
-          </div>
-        `;
-        songListEl.appendChild(card);
-      });
-    }
-
-    function setActiveBtn(activeBtn) {
-      allButtons.forEach(btn => btn.classList.remove("active"));
-      activeBtn.classList.add("active");
-    }
-
-    btnSortName.addEventListener("click", () => {
-      setActiveBtn(btnSortName);
-      if (currentSortMode === "name-asc") {
-        currentSortMode = "name-desc";
-        btnSortName.innerText = "이름순 ↓ (Z-A)";
-      } else {
-        currentSortMode = "name-asc";
-        btnSortName.innerText = "이름순 ↑ (A-Z)";
-      }
-      renderList();
-    });
-
-    btnSortYear.addEventListener("click", () => {
-      setActiveBtn(btnSortYear);
-      if (currentSortMode === "year-asc") {
-        currentSortMode = "year-desc";
-        btnSortYear.innerText = "발매연도순 ↓ (최신순)";
-      } else {
-        currentSortMode = "year-asc";
-        btnSortYear.innerText = "발매연도순 ↑ (과거순)";
-      }
-      renderList();
-    });
-
-    btnSortAlbum.addEventListener("click", () => {
-      setActiveBtn(btnSortAlbum);
-      if (currentSortMode === "album-asc") {
-        currentSortMode = "album-desc";
-        btnSortAlbum.innerText = "앨범순 ↓ (최신앨범부터)";
-      } else {
-        currentSortMode = "album-asc";
-        btnSortAlbum.innerText = "앨범순 ↑ (1집부터)";
-      }
-      renderList();
-    });
-
-    searchInput.addEventListener("input", renderList);
-
-    renderList();
-  </script>
-</body>
-</html>
+      <div class="station-right">
+        <span class="station-tag">Non-Stop MV</span>
+        <span class="station-arrow" id="stationArrow">▼</span>
+      </div>
+    </button>
+    <div class="station-body" id="
