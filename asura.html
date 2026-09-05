@@ -32,7 +32,6 @@
       min-height: 100vh;
     }
 
-    /* 상단 헤더 & 뒤로가기 버튼 */
     .top-bar {
       width: 100%;
       max-width: 560px;
@@ -69,7 +68,6 @@
       font-weight: 700;
     }
 
-    /* 유튜브 플레이어 박스 */
     .player-wrapper {
       width: 100%;
       max-width: 560px;
@@ -86,7 +84,6 @@
       height: 100%;
     }
 
-    /* 가사 스크롤 영역 */
     .lyrics-wrapper {
       width: 100%;
       max-width: 560px;
@@ -120,7 +117,6 @@
       transition: color 0.2s;
     }
 
-    /* 일반 가사 재생 중 강조 */
     .lyric-line.active {
       color: var(--text-active);
       font-weight: 700;
@@ -128,16 +124,25 @@
       background-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* 떼창 가사 기본 상태 */
     .lyric-line.chant,
     .lyric-line.chant .sub-lyric {
       color: #ff6b81 !important;
     }
 
-    /* 떼창 가사 재생 중 강조 */
     .lyric-line.active.chant,
     .lyric-line.active.chant .sub-lyric {
       color: #ff4757 !important;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+
+    /* 문장 중간 부분 떼창 스타일 추가 */
+    .inline-chant {
+      color: #ff6b81;
+      transition: all 0.2s ease;
+    }
+
+    .lyric-line.active .inline-chant {
+      color: #ff4757;
       text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
     }
   </style>
@@ -174,7 +179,8 @@
 
       { time: 27.2, text: "バッドエンドが迫りくる危機<br><span class='sub-lyric'>밧도엔도가 세마리쿠루 키키<br>배드엔딩이 덮쳐오는 위기</span>", isChant: false },
       { time: 29.4, text: "鼓動がアップテンポに響き<br><span class='sub-lyric'>코도오가 압푸템포니 히비키<br>고동이 빠른 템포로 울려</span>", isChant: false },
-      { time: 31.6, text: "実況が'ほらっほらっほらっ'と煽り<br><span class='sub-lyric'>짓쿄가 호랏 호랏 호랏토 아오리<br>지금 상황이 보란듯이 약올리고</span>", isChant: false },
+      // 1. 호랏호랏호랏 떼창 적용
+      { time: 31.6, text: "実況が'<span class='inline-chant'>ほらっほらっほらっ</span>'と煽り<br><span class='sub-lyric'>짓쿄가 '<span class='inline-chant'>호랏 호랏 호랏</span>'토 아오리<br>지금 상황이 <span class='inline-chant'>보란듯이</span> 약올리고</span>", isChant: false },
       { time: 33.7, text: "意地悪なあの娘で台無し<br><span class='sub-lyric'>이지와루나 아노 코데 다이나시<br>짓궂은 그 아이로 다시 무효</span>", isChant: false },
 
       { time: 35.8, text: "修羅修羅修羅の道<br><span class='sub-lyric'>슈라 슈라 슈라노 미치<br>수라의 길</span>", isChant: false },
@@ -187,9 +193,11 @@
       { time: 48.9, text: "輪廻転生都合よく生きるわ'降参です'<br><span class='sub-lyric'>린네텐세 츠고요쿠 이키루와 ‘코우산데스‘<br>윤회전생으로 편하게 살 거야 </span>", isChant: true },
       { time: 51.1, text: "空回り'修羅修羅修羅'<br><span class='sub-lyric'>카라마와리 ’슈라 슈라 슈라‘<br>헛바퀴 돌기 ‘수라 수라 수라‘</span>", isChant: true },
 
-      { time: 53.2, text: "ハラハラハラが止まらないわ<br><span class='sub-lyric'>하라 하라 하라가 토마라나이와<br>아슬아슬함이 멈추지 않아</span>", isChant: false },
+      // 2. 하라하라하라 떼창 적용
+      { time: 53.2, text: "<span class='inline-chant'>ハラハラハラ</span>が止まらないわ<br><span class='sub-lyric'><span class='inline-chant'>하라 하라 하라</span>가 토마라나이와<br><span class='inline-chant'>아슬아슬함</span>이 멈추지 않아</span>", isChant: false },
       { time: 55.4, text: "誰か止めてよ心はまだ<br><span class='sub-lyric'>다레카 토메테요 코코로와 마다<br>누군가 멈춰줘 내 마음은 아직</span>", isChant: false },
-      { time: 57.6, text: "ジタバタバタ逆転狙いならば<br><span class='sub-lyric'>지타 바타 바타 갸쿠텐 네라이나라바<br>버둥대며 역전을 노린다면</span>", isChant: false },
+      // 3. 지타바타바타 떼창 적용
+      { time: 57.6, text: "<span class='inline-chant'>ジタバタバタ</span>逆転狙いならば<br><span class='sub-lyric'><span class='inline-chant'>지타 바타 바타</span> 갸쿠텐 네라이나라바<br><span class='inline-chant'>버둥대며</span> 역전을 노린다면</span>", isChant: false },
       { time: 59.8, text: "付き合うわ何処までも地の果てまでも<br><span class='sub-lyric'>츠키아우와 도코마데모 치노 하테마데모<br>끝까지 함께할께 이 땅의 끝까지</span>", isChant: false },
 
       { time: 70.8, text: "迷えど進め<br><span class='sub-lyric'>마요에도 스스메<br>주저하면서도 나아가</span>", isChant: false },
