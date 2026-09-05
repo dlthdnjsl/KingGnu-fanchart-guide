@@ -28,7 +28,6 @@
 
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-      /* 상단에 은은한 다크레드 방사형 그라디언트 적용 */
       background-color: var(--bg-color);
       background-image: radial-gradient(circle at 50% 0%, #2a1216 0%, #0d0d10 65%);
       background-repeat: no-repeat;
@@ -40,7 +39,6 @@
       padding: 36px 16px 40px;
     }
 
-    /* 헤더 타이포그래피 */
     header {
       text-align: center;
       margin-bottom: 24px;
@@ -67,7 +65,7 @@
       letter-spacing: -0.3px;
     }
 
-    /* 전곡 MV 연속 감상 (STATION) 아코디언 섹션 */
+    /* 전곡 MV 연속 감상 (STATION) */
     .station-accordion {
       width: 100%;
       max-width: 600px;
@@ -219,7 +217,7 @@
       font-weight: 700;
     }
 
-    /* 곡 카드 리스트 */
+    /* 곡 카드 */
     .song-grid {
       width: 100%;
       max-width: 600px;
@@ -234,7 +232,7 @@
       justify-content: space-between;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-left: 3.5px solid #444455; /* 기본 좌측 컬러 바 */
+      border-left: 4px solid #444455;
       border-radius: 12px;
       padding: 15px 18px;
       text-decoration: none;
@@ -242,12 +240,12 @@
       transition: all 0.2s ease;
     }
 
-    /* 앨범별 시그니처 좌측 컬러 포인트 */
-    .song-card.album-tokyo { border-left-color: #636e72; }
-    .song-card.album-sympa { border-left-color: #e17055; }
-    .song-card.album-ceremony { border-left-color: #d63031; }
-    .song-card.album-greatest { border-left-color: #0984e3; }
-    .song-card.album-single { border-left-color: #a29bfe; }
+    /* 나무위키 이미지 테마 기반 컬러 팔레트 */
+    .song-card.album-tokyo { border-left-color: #a46d49; }    /* 1집 Tokyo Rendez-Vous: 웜 브라운 */
+    .song-card.album-sympa { border-left-color: #e2614b; }    /* 2집 Sympa: 코랄 레드오렌지 */
+    .song-card.album-ceremony { border-left-color: #ffd000; } /* 3집 CEREMONY: 옐로우 골드 */
+    .song-card.album-greatest { border-left-color: #70a1c2; } /* 4집 THE GREATEST UNKNOWN: 미러 실버 블루 */
+    .song-card.album-single { border-left-color: #636e72; }   /* 싱글/기타 타이틀: 차콜 그레이 */
 
     .song-card:hover {
       background-color: var(--card-hover);
@@ -392,7 +390,6 @@
     const btnSortAlbum = document.getElementById("btnSortAlbum");
     const allButtons = [btnSortName, btnSortYear, btnSortAlbum];
 
-    // 아코디언 토글 제어
     const stationToggle = document.getElementById("stationToggle");
     const stationBody = document.getElementById("stationBody");
     const stationArrow = document.getElementById("stationArrow");
@@ -428,7 +425,6 @@
       return 5;
     }
 
-    // 앨범별 컬러 클래스 매칭 함수
     function getAlbumClass(album) {
       const a = (album || "").toLowerCase();
       if (a.includes("tokyo rendez-vous")) return "album-tokyo";
