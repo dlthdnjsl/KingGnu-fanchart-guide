@@ -156,7 +156,7 @@
       display: block;
     }
 
-    /* 컨트롤러 (검색 & 정렬) */
+    /* 컨트롤러 (검색 & 2분할 정렬 버튼) */
     .controls-wrapper {
       width: 100%;
       max-width: 600px;
@@ -182,10 +182,11 @@
       border-color: var(--accent-color);
     }
 
+    /* 2개 버튼 균등 배치 */
     .sort-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
       width: 100%;
     }
 
@@ -195,7 +196,7 @@
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
       color: var(--text-sub);
-      font-size: clamp(0.72rem, 2.7vw, 0.83rem);
+      font-size: 0.82rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -240,12 +241,11 @@
       transition: all 0.2s ease;
     }
 
-    /* 나무위키 이미지 테마 기반 컬러 팔레트 */
-    .song-card.album-tokyo { border-left-color: #a46d49; }    /* 1집 Tokyo Rendez-Vous: 웜 브라운 */
-    .song-card.album-sympa { border-left-color: #e2614b; }    /* 2집 Sympa: 코랄 레드오렌지 */
-    .song-card.album-ceremony { border-left-color: #ffd000; } /* 3집 CEREMONY: 옐로우 골드 */
-    .song-card.album-greatest { border-left-color: #70a1c2; } /* 4집 THE GREATEST UNKNOWN: 미러 실버 블루 */
-    .song-card.album-single { border-left-color: #636e72; }   /* 싱글/기타 타이틀: 차콜 그레이 */
+    .song-card.album-tokyo { border-left-color: #a46d49; }    /* 1집 Tokyo Rendez-Vous */
+    .song-card.album-sympa { border-left-color: #e2614b; }    /* 2집 Sympa */
+    .song-card.album-ceremony { border-left-color: #ffd000; } /* 3집 CEREMONY */
+    .song-card.album-greatest { border-left-color: #70a1c2; } /* 4집 THE GREATEST UNKNOWN */
+    .song-card.album-single { border-left-color: #636e72; }   /* 싱글/기타 */
 
     .song-card:hover {
       background-color: var(--card-hover);
@@ -349,7 +349,6 @@
 
     <div class="sort-container">
       <button class="sort-btn active" id="btnSortName">이름순 ↑</button>
-      <button class="sort-btn" id="btnSortYear">발매순 ↑</button>
       <button class="sort-btn" id="btnSortAlbum">앨범순 ↑</button>
     </div>
   </div>
@@ -386,9 +385,8 @@
     const songListEl = document.getElementById("songList");
     const searchInput = document.getElementById("searchInput");
     const btnSortName = document.getElementById("btnSortName");
-    const btnSortYear = document.getElementById("btnSortYear");
     const btnSortAlbum = document.getElementById("btnSortAlbum");
-    const allButtons = [btnSortName, btnSortYear, btnSortAlbum];
+    const allButtons = [btnSortName, btnSortAlbum];
 
     const stationToggle = document.getElementById("stationToggle");
     const stationBody = document.getElementById("stationBody");
@@ -474,12 +472,6 @@
           return b.title.localeCompare(a.title, undefined, { sensitivity: 'base' });
         });
       } 
-      else if (currentSortMode === "year-asc") {
-        filtered.sort((a, b) => a.year - b.year);
-      } 
-      else if (currentSortMode === "year-desc") {
-        filtered.sort((a, b) => b.year - a.year);
-      }
       else if (currentSortMode === "album-asc") {
         filtered.sort((a, b) => {
           const pA = getAlbumPriority(a.album);
@@ -536,18 +528,6 @@
       } else {
         currentSortMode = "name-asc";
         btnSortName.innerText = "이름순 ↑";
-      }
-      renderList();
-    });
-
-    btnSortYear.addEventListener("click", () => {
-      setActiveBtn(btnSortYear);
-      if (currentSortMode === "year-asc") {
-        currentSortMode = "year-desc";
-        btnSortYear.innerText = "발매순 ↓";
-      } else {
-        currentSortMode = "year-asc";
-        btnSortYear.innerText = "발매순 ↑";
       }
       renderList();
     });
