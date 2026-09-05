@@ -165,55 +165,57 @@
 
     // 한소절 시작 시 0.1~0.2초 여유를 둔 타임스탬프 데이터
     const lyricsData = [
-      { time: 2.8, text: "他の誰かになんてなれやしないよ<br><span class='sub-lyric'>호카노 다레카니 난테 나레야시나이요<br>다른 누군가가 될 수 있을리 없어</span>", isChant: false },
-      { time: 7.8, text: "そんなのわかってるんだ<br><span class='sub-lyric'>손나노 와캇테룬다<br>그런 것쯤은 알고 있어</span>", isChant: false },
-      { time: 10.8, text: "明日を信じてみたいの<br><span class='sub-lyric'>아스오 신지테미타이노<br>내일을 믿어보고 싶어</span>", isChant: false },
-      { time: 14.8, text: "微かな自分を愛せなかったとしても<br><span class='sub-lyric'>카스카나 지분오 아이세나캇타토시테모<br>초라한 나 자신을 사랑할 수 없다고 해도</span>", isChant: false },
+      { time: 3.3, text: "他の誰かになんてなれやしないよ<br><span class='sub-lyric'>호카노 다레카니 난테 나레야시나이요<br>다른 누군가가 될 수 있을리 없어</span>", isChant: false },
+      { time: 8.3, text: "そんなのわかってるんだ<br><span class='sub-lyric'>손나노 와캇테룬다<br>그런 것쯤은 알고 있어</span>", isChant: false },
+      { time: 11.8, text: "明日を信じてみたいの<br><span class='sub-lyric'>아스오 신지테미타이노<br>내일을 믿어보고 싶어</span>", isChant: false },
+      { time: 14.7, text: "微かな自分を愛せなかったとしても<br><span class='sub-lyric'>카스카나 지분오 아이세나캇타토시테모<br>초라한 나 자신을 사랑할 수 없다고 해도</span>", isChant: false },
 
-      { time: 19.8, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
-      { time: 24.0, text: "T-t-t-t- teenager forever", isChant: true },
-      { time: 28.2, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
-      { time: 32.5, text: "T-t-t-t- teenager forever", isChant: true },
+      { time: 20.8, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
+      { time: 26.0, text: "T-t-t-t- teenager forever", isChant: true },
+      { time: 30.2, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
+      { time: 33.5, text: "T-t-t-t- teenager forever", isChant: true },
 
-      { time: 36.8, text: "望んだこと全てが叶うわけはないよ<br><span class='sub-lyric'>노존다 코토 스베테가 카나우와케와 나이요<br>바라왔던 모든 게 이루어질 수는 없어</span>", isChant: false },
+      { time: 37.0, text: "望んだこと全てが叶うわけはないよ<br><span class='sub-lyric'>노존다 코토 스베테가 카나우와케와 나이요<br>바라왔던 모든 게 이루어질 수는 없어</span>", isChant: false },
       { time: 41.8, text: "そんなのわかってるんだ<br><span class='sub-lyric'>손나노 와캇테룬다<br>그런 것쯤은 알고 있어</span>", isChant: false },
-      { time: 44.8, text: "深い傷もいずれはかさぶたに変わって<br><span class='sub-lyric'>후카이 키즈모 이즈레와 카사부타니 카왓테<br>깊은 상처도 언젠가 흉터로 바뀌어서</span>", isChant: false },
-      { time: 49.8, text: "剥がれ落ちるだろうか<br><span class='sub-lyric'>하가레 오치루다로오카<br>벗겨져 떨어지는 걸까</span>", isChant: false },
+      { time: 45.3, text: "深い傷もいずれはかさぶたに変わって<br><span class='sub-lyric'>후카이 키즈모 이즈레와 카사부타니 카왓테<br>깊은 상처도 언젠가 흉터로 바뀌어서</span>", isChant: false },
+      { time: 50.3, text: "剥がれ落ちるだろうか<br><span class='sub-lyric'>하가레 오치루다로오카<br>벗겨져 떨어지는 걸까</span>", isChant: false },
 
       { time: 53.8, text: "いつまでも相変わらず つまらない話を<br><span class='sub-lyric'>이츠마데모 아이카와라즈 츠마라나이 하나시오<br>언제까지나 변함없이 시시한 이야기를</span>", isChant: false },
-      { time: 57.8, text: "つまらない中に どこまでも幸せを探すよ<br><span class='sub-lyric'>츠마라나이 나카니 도코마데모 시아와세오 사가스요<br>지루한 삶 속에서 어디까지나 행복을 찾을 거야</span>", isChant: false },
+      { time: 58.2, text: "つまらない中に どこまでも幸せを探すよ<br><span class='sub-lyric'>츠마라나이 나카니 도코마데모 시아와세오 사가스요<br>지루한 삶 속에서 어디까지나 행복을 찾을 거야</span>", isChant: false },
 
-      { time: 62.8, text: "伝えたい想いは溢れてるのに<br><span class='sub-lyric'>츠타에타이 오모이와 아후레테루노니<br>전하고 싶은 마음은 넘쳐흐르고 있는데</span>", isChant: false },
-      { time: 66.8, text: "伝え方が分からなくて 今でも言葉を探してるんだ<br><span class='sub-lyric'>츠타에카타가 와카라나쿠테 이마데모 코토바오 사가시테룬다<br>전할 방법을 모르겠어서 지금도 말을 고르고 있어</span>", isChant: false },
-      { time: 71.0, text: "遠くに散っていった夢の欠片に<br><span class='sub-lyric'>토오쿠니 칫테잇타 유메노 카케라니<br>멀리 흩뿌려져있던 꿈의 조각에</span>", isChant: false },
-      { time: 74.8, text: "めくるめくあなたの煌めきに 気づけたらいいんだ<br><span class='sub-lyric'>메쿠루메쿠 아나타노 키라메키니 키즈케타라 이인다<br>눈이 부신 당신의 반짝임을 알아채면 돼</span>", isChant: false },
+      { time: 63.2, text: "伝えたい想いは溢れてるのに<br><span class='sub-lyric'>츠타에타이 오모이와 아후레테루노니<br>전하고 싶은 마음은 넘쳐흐르고 있는데</span>", isChant: false },
+      { time: 67.0, text: "伝え方が分からなくて 今でも言葉を探してるんだ<br><span class='sub-lyric'>츠타에카타가 와카라나쿠테 이마데모 코토바오 사가시테룬다<br>전할 방법을 모르겠어서 지금도 말을 고르고 있어</span>", isChant: false },
+      { time: 71.5, text: "遠くに散っていった夢の欠片に<br><span class='sub-lyric'>토오쿠니 칫테잇타 유메노 카케라니<br>멀리 흩뿌려져있던 꿈의 조각에</span>", isChant: false },
+      { time: 75.3, text: "めくるめくあなたの煌めきに 気づけたらいいんだ<br><span class='sub-lyric'>메쿠루메쿠 아나타노 키라메키니 키즈케타라 이인다<br>눈이 부신 당신의 반짝임을 알아채면 돼</span>", isChant: false },
 
-      { time: 79.8, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
+      { time: 80.0, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
       { time: 84.0, text: "T-t-t-t- teenager forever", isChant: true },
       { time: 88.2, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
       { time: 92.5, text: "T-t-t-t- teenager forever", isChant: true },
 
-      { time: 95.8, text: "結局のところ誰も教えちゃくれないんだ<br><span class='sub-lyric'>켓쿄쿠노 토코로 다레모 오시에챠 쿠레나인다<br>결국 아무도 알려주지 않아</span>", isChant: false },
-      { time: 100.8, text: "進むべき道なんて<br><span class='sub-lyric'>스스무베키 미치난테<br>가야할 길 같은 건</span>", isChant: false },
-      { time: 104.8, text: "等身大のままで生きていこうぜ<br><span class='sub-lyric'>토신다이노 마마데 이키테이코오제<br>있는 그대로의 모습으로 살아가자</span>", isChant: false },
+      { time: 96.3, text: "結局のところ誰も教えちゃくれないんだ<br><span class='sub-lyric'>켓쿄쿠노 토코로 다레모 오시에챠 쿠레나인다<br>결국 아무도 알려주지 않아</span>", isChant: false },
+      { time: 101.3, text: "進むべき道なんて<br><span class='sub-lyric'>스스무베키 미치난테<br>가야할 길 같은 건</span>", isChant: false },
+      { time: 104.9, text: "等身大のままで生きていこうぜ<br><span class='sub-lyric'>토신다이노 마마데 이키테이코오제<br>있는 그대로의 모습으로 살아가자</span>", isChant: false },
       { time: 109.8, text: "歳を重ねても<br><span class='sub-lyric'>토시오 카사네테모<br>나이를 먹어도</span>", isChant: false },
 
-      { time: 112.8, text: "いつまでも相変わらず つまらない話を<br><span class='sub-lyric'>이츠마데모 아이카와라즈 츠마라나이 하나시오<br>언제까지나 변함없이 시시한 이야기를</span>", isChant: false },
-      { time: 117.8, text: "つまらない中に どこまでも幸せを探すよ<br><span class='sub-lyric'>츠마라나이 나카니 도코마데모 시아와세오 사가스요<br>지루한 삶 속에서 어디까지나 행복을 찾을 거야</span>", isChant: false },
-      { time: 122.8, text: "煌めきを探してよ<br><span class='sub-lyric'>키라메키오 사카시테요<br>반짝임을 찾아줘</span>", isChant: false },
+      { time: 113.2, text: "いつまでも相変わらず つまらない話を<br><span class='sub-lyric'>이츠마데모 아이카와라즈 츠마라나이 하나시오<br>언제까지나 변함없이 시시한 이야기를</span>", isChant: false },
+      { time: 117.7, text: "つまらない中に どこまでも幸せを探すよ<br><span class='sub-lyric'>츠마라나이 나카니 도코마데모 시아와세오 사가스요<br>지루한 삶 속에서 어디까지나 행복을 찾을 거야</span>", isChant: false },
+      { time: 123.0, text: "煌めきを探してよ<br><span class='sub-lyric'>키라메키오 사카시테요<br>반짝임을 찾아줘</span>", isChant: true },
 
-      { time: 125.0, text: "散々振り回して振り回されて<br><span class='sub-lyric'>산잔 후리마와시테 후리마와사레테<br>마음껏 휘두르고 휘둘러지고</span>", isChant: false },
-      { time: 129.8, text: "大事なのはあなただってことに 気づかないままで<br><span class='sub-lyric'>다이지나노와 아나타닷테 코토니 키즈카나이마마데<br>중요한 건 당신이라는 사실을 깨닫지 못한채로</span>", isChant: false },
-      { time: 133.8, text: "一体未来はどうなるのかなんてことより<br><span class='sub-lyric'>잇타이 미라이와 도오 나루노카 난테 코토요리<br>도대체 미래는 어떻게 되는지 같은 것 보다</span>", isChant: false },
-      { time: 137.8, text: "めくるめく今という煌めきに 気づけたらいいんだ<br><span class='sub-lyric'>메쿠루메쿠 이마토이우 키라메키니 키즈케타라 이인다<br>눈이 부신 지금이라는 반짝임을 알아채면 되는 거야</span>", isChant: false },
+      { time: 126.0, text: "散々振り回して振り回されて<br><span class='sub-lyric'>산잔 후리마와시테 후리마와사레테<br>마음껏 휘두르고 휘둘러지고</span>", isChant: false },
+      { time: 129.7, text: "大事なのはあなただってことに 気づかないままで<br><span class='sub-lyric'>다이지나노와 아나타닷테 코토니 키즈카나이마마데<br>중요한 건 당신이라는 사실을 깨닫지 못한채로</span>", isChant: false },
+      { time: 134.0, text: "一体未来はどうなるのかなんてことより<br><span class='sub-lyric'>잇타이 미라이와 도오 나루노카 난테 코토요리<br>도대체 미래는 어떻게 되는지 같은 것 보다</span>", isChant: false },
+      { time: 138.0, text: "めくるめく今という煌めきに 気づけたらいいんだ<br><span class='sub-lyric'>메쿠루메쿠 이마토이우 키라메키니 키즈케타라 이인다<br>눈이 부신 지금이라는 반짝임을 알아채면 되는 거야</span>", isChant: false },
 
+      { time: 143.0, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
+      { time: 147.0, text: "T-t-t-t- teenager forever", isChant: true },
       { time: 150.8, text: "T-t-t-t- teenager forever (T-t-t-t- teenager forever)", isChant: true },
       { time: 155.0, text: "T-t-t-t- teenager forever", isChant: true },
 
-      { time: 158.8, text: "他の誰かになんてなれやしないよ<br><span class='sub-lyric'>호카노 다레카니 난테 나레야 시나이요<br>다른 누군가가 될 수 있을리 없어</span>", isChant: false },
-      { time: 164.8, text: "そんなのわかってるんだ<br><span class='sub-lyric'>손나노 와캇테룬다<br>그런 것쯤은 알고 있어</span>", isChant: false },
-      { time: 167.8, text: "明日を信じてみたいの<br><span class='sub-lyric'>아스오 신지테미타이노<br>내일을 믿어보고 싶어</span>", isChant: false },
-      { time: 171.8, text: "微かな自分を愛せなかったとしても<br><span class='sub-lyric'>카스카나 지분오 아이세나캇타 토시테모<br>초라한 나 자신을 사랑할 수 없다고 해도</span>", isChant: false }
+      { time: 158.9, text: "他の誰かになんてなれやしないよ<br><span class='sub-lyric'>호카노 다레카니 난테 나레야 시나이요<br>다른 누군가가 될 수 있을리 없어</span>", isChant: true },
+      { time: 164.8, text: "そんなのわかってるんだ<br><span class='sub-lyric'>손나노 와캇테룬다<br>그런 것쯤은 알고 있어</span>", isChant: true },
+      { time: 168.2, text: "明日を信じてみたいの<br><span class='sub-lyric'>아스오 신지테미타이노<br>내일을 믿어보고 싶어</span>", isChant: true },
+      { time: 171.8, text: "微かな自分を愛せなかったとしても<br><span class='sub-lyric'>카스카나 지분오 아이세나캇타 토시테모<br>초라한 나 자신을 사랑할 수 없다고 해도</span>", isChant: true }
     ];
 
     let player;
