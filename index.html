@@ -44,7 +44,6 @@
       margin-bottom: 24px;
     }
 
-    /* 1. 타이틀 입체감 강화 */
     header h1 {
       font-family: 'Montserrat', 'Pretendard', sans-serif;
       font-size: clamp(1.4rem, 6vw, 2.1rem);
@@ -53,12 +52,12 @@
       margin-bottom: 6px;
       white-space: nowrap;
       text-transform: uppercase;
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* 텍스트 뒤에 부드러운 그림자 */
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     header h1 span {
       color: var(--accent-color);
-      text-shadow: 0 0 20px rgba(255, 71, 87, 0.5); /* 네온 효과 살짝 강화 */
+      text-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
     }
 
     header p {
@@ -171,7 +170,7 @@
 
     .search-box input {
       width: 100%;
-      padding: 12px 16px; /* 패딩 살짝 줘서 타이핑 영역 넓게 */
+      padding: 12px 16px;
       border-radius: 10px;
       border: 1px solid var(--border-color);
       background-color: var(--card-bg);
@@ -181,7 +180,6 @@
       transition: all 0.2s ease;
     }
 
-    /* 3. 검색창 포커스 시 은은한 아우터 글로우 추가 */
     .search-box input:focus {
       border-color: var(--accent-color);
       box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.15); 
@@ -241,14 +239,14 @@
       padding: 14px 18px;
       text-decoration: none;
       color: inherit;
-      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 호버 시 더 부드럽게 */
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     .song-card:hover {
       background-color: var(--card-hover);
-      border-color: #383848; /* 호버 시 테두리색 부드럽게 밝아짐 */
+      border-color: #383848;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* 호버 시 떠오르는 느낌 추가 */
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     }
 
     .song-info {
@@ -264,7 +262,7 @@
       letter-spacing: -0.2px;
     }
 
-    /* 2. 앨범 텍스트 뱃지 (경계선 제거 후 매끄러운 캡슐 형태로) */
+    /* 앨범 텍스트 뱃지 */
     .album-badge {
       font-size: 0.72rem;
       font-weight: 600;
@@ -305,7 +303,7 @@
       font-size: 0.72rem;
       font-weight: 600;
       color: var(--accent-color);
-      background-color: rgba(255, 71, 87, 0.15); /* 뱃지 배경 살짝 진하게 */
+      background-color: rgba(255, 71, 87, 0.15);
       padding: 4px 8px;
       border-radius: 12px;
       white-space: nowrap;
@@ -320,7 +318,7 @@
 
     .song-card:hover .arrow-icon {
       color: var(--accent-color);
-      transform: translateX(4px); /* 화살표 이동 조금 더 역동적으로 */
+      transform: translateX(4px);
     }
 
     footer {
@@ -345,7 +343,6 @@
     <p>킹누 라이브 떼창 가이드</p>
   </header>
 
-  <!-- STATION 아코디언 배너 -->
   <div class="station-accordion">
     <button class="station-toggle-btn" id="stationToggle">
       <div class="station-title">
@@ -370,7 +367,7 @@
 
   <div class="controls-wrapper">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="곡 제목 또는 앨범 검색...">
+      <input type="text" id="searchInput" placeholder="곡 제목(한글 검색 가능) 또는 앨범 검색...">
     </div>
 
     <div class="sort-container">
@@ -386,24 +383,25 @@
   </footer>
 
   <script>
+    // aliases(검색용 한국어 발음) 추가
     const songData = [
-      { title: "SPECIALZ", album: "THE GREATEST UNKNOWN", year: 2023, url: "specialz.html", badge: "🔥" },
-      { title: "Teenager Forever", album: "CEREMONY", year: 2020, url: "teenagerforever.html", badge: "🔥" },
-      { title: "Flash!!!", album: "Sympa", year: 2019, url: "flash.html", badge: "" },
-      { title: "雨燦々", album: "THE GREATEST UNKNOWN", year: 2022, url: "amesansan.html", badge: "🔥" },
-      { title: "Vinyl", album: "Tokyo Rendez-Vous", year: 2017, url: "vinyl.html", badge: "" },
-      { title: "AIZO", album: "주술회전 3기 OP", year: 2026, url: "aizo.html", badge: "🔥" },
-      { title: "一途", album: "THE GREATEST UNKNOWN", year: 2021, url: "ichizu.html", badge: "" },
-      { title: "逆夢", album: "THE GREATEST UNKNOWN", year: 2021, url: "sakayume.html", badge: "" },
-      { title: "飛行艇", album: "CEREMONY", year: 2019, url: "hikoutei.html", badge: "🔥" },
-      { title: "TWILIGHT!!!", album: "명탐정 코난: 흑철의 어영 ED", year: 2025, url: "twilight.html", badge: "" },
-      { title: "ねっこ", album: "", year: 2024, url: "nekko.html", badge: "" },
-      { title: "SO BAD", album: "유니버셜 스튜디오 좀비 데 댄스 콜라보 곡", year: 2024, url: "sobad.html", badge: "🔥" },
-      { title: "Prayer X", album: "Sympa", year: 2018, url: "prayerx.html", badge: "🔥" },
-      { title: "STARDOM", album: "THE GREATEST UNKNOWN", year: 2022, url: "stardom.html", badge: "" },
-      { title: "Slumberland", album: "Sympa", year: 2018, url: "slumberland.html", badge: "" },
-      { title: "Sorrows", album: "Sympa", year: 2019, url: "sorrows.html", badge: "" },
-      { title: "):阿修羅:(", album: "THE GREATEST UNKNOWN", year: 2023, url: "asura.html", badge: "" }
+      { title: "SPECIALZ", album: "THE GREATEST UNKNOWN", year: 2023, url: "specialz.html", badge: "🔥", aliases: ["스페셜즈"] },
+      { title: "Teenager Forever", album: "CEREMONY", year: 2020, url: "teenagerforever.html", badge: "🔥", aliases: ["틴에이저 포에버", "틴포"] },
+      { title: "Flash!!!", album: "Sympa", year: 2019, url: "flash.html", badge: "", aliases: ["플래시"] },
+      { title: "雨燦々", album: "THE GREATEST UNKNOWN", year: 2022, url: "amesansan.html", badge: "🔥", aliases: ["아메산산"] },
+      { title: "Vinyl", album: "Tokyo Rendez-Vous", year: 2017, url: "vinyl.html", badge: "", aliases: ["비닐"] },
+      { title: "AIZO", album: "주술회전 3기 OP", year: 2026, url: "aizo.html", badge: "🔥", aliases: ["아이조"] },
+      { title: "一途", album: "THE GREATEST UNKNOWN", year: 2021, url: "ichizu.html", badge: "", aliases: ["일도"] },
+      { title: "逆夢", album: "THE GREATEST UNKNOWN", year: 2021, url: "sakayume.html", badge: "", aliases: ["역몽"] },
+      { title: "飛行艇", album: "CEREMONY", year: 2019, url: "hikoutei.html", badge: "🔥", aliases: ["비행정"] },
+      { title: "TWILIGHT!!!", album: "명탐정 코난: 흑철의 어영 ED", year: 2025, url: "twilight.html", badge: "", aliases: ["트와일라잇"] },
+      { title: "ねっこ", album: "", year: 2024, url: "nekko.html", badge: "", aliases: ["넷코"] },
+      { title: "SO BAD", album: "유니버셜 스튜디오 좀비 데 댄스 콜라보 곡", year: 2024, url: "sobad.html", badge: "🔥", aliases: ["쏘 배드", "쏘배드"] },
+      { title: "Prayer X", album: "Sympa", year: 2018, url: "prayerx.html", badge: "🔥", aliases: ["프레이어 엑스", "프엑"] },
+      { title: "STARDOM", album: "THE GREATEST UNKNOWN", year: 2022, url: "stardom.html", badge: "", aliases: ["스타덤"] },
+      { title: "Slumberland", album: "Sympa", year: 2018, url: "slumberland.html", badge: "", aliases: ["슬럼버랜드"] },
+      { title: "Sorrows", album: "Sympa", year: 2019, url: "sorrows.html", badge: "", aliases: ["쏘로우", "쏘로우즈"] },
+      { title: "):阿修羅:(", album: "THE GREATEST UNKNOWN", year: 2023, url: "asura.html", badge: "", aliases: ["아수라"] }
     ];
 
     let currentSortMode = "name-asc";
@@ -459,12 +457,16 @@
     }
 
     function renderList() {
-      const query = searchInput.value.toLowerCase().trim();
+      // 띄어쓰기를 무시하여 검색이 더 잘 되도록 처리
+      const query = searchInput.value.toLowerCase().replace(/\s+/g, '');
 
-      let filtered = songData.filter(song => 
-        song.title.toLowerCase().includes(query) || 
-        song.album.toLowerCase().includes(query)
-      );
+      let filtered = songData.filter(song => {
+        const matchTitle = song.title.toLowerCase().replace(/\s+/g, '').includes(query);
+        const matchAlbum = song.album.toLowerCase().replace(/\s+/g, '').includes(query);
+        const matchAlias = song.aliases && song.aliases.some(alias => alias.replace(/\s+/g, '').includes(query));
+        
+        return matchTitle || matchAlbum || matchAlias;
+      });
 
       if (currentSortMode === "name-asc") {
         filtered.sort((a, b) => {
