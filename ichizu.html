@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - 一途 (떼창 가이드)</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* 상단 헤더 & 뒤로가기 버튼 */
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    /* 메인 일체형 카드 컨테이너 */
+    .main-container {
+      width: 100%;
+      max-width: 560px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    /* 유튜브 플레이어 박스 */
+    .player-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      background-color: #000;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 가사 영역 (상하 페이드아웃 마스크 & 스크롤바 커스텀) */
+    .lyrics-wrapper {
+      width: 100%;
+      height: 52vh;
+      min-height: 280px;
+      padding: 24px 16px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+
+      scrollbar-width: thin;
+      scrollbar-color: #2e2e3a transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-thumb {
+      background-color: #2e2e3a;
+      border-radius: 4px;
+    }
+
+    .lyric-line {
+      padding: 12px 14px;
+      margin: 6px 0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+      transition: all 0.22s ease-out;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #7b7b8a;
+      font-weight: 400;
+      display: block;
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+
+    /* 1. 일반 가사 활성 상태 (입체적인 Pill 형태) */
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+      transform: scale(1.01);
+    }
+
+    .lyric-line.active .sub-lyric {
+      color: #b5b5c2;
+    }
+
+    /* 2. 떼창 가사 기본 상태 */
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    /* 3. 떼창 가사 활성 상태 */
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 14px rgba(255, 71, 87, 0.65);
+      background-color: rgba(255, 71, 87, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 네비게이션 -->
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">一途</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <div class="main-container">
+    <div class="player-wrapper">
+      <div id="player"></div>
+    </div>
+
+    <div class="lyrics-wrapper" id="lyricsContainer"></div>
+  </div>
+
+  <script>
+    const YOUTUBE_VIDEO_ID = 'TbbJUbrkJrg'; 
+
+    const lyricsData = [
+      { time: 25.1, text: "最期にもう一度 強く抱きしめて<br><span class='sub-lyric'>사이고니 모이치도 츠요쿠 다키시메테<br>마지막으로 한 번만 세게 안아줘</span>", isChant: false },
+      { time: 28.3, text: "その後はもう 何も要らないよ<br><span class='sub-lyric'>소노 아토와 모오 나니모 이라나이요<br>그 후엔 아무것도 필요 없어</span>", isChant: false },
+      { time: 31.6, text: "僕の未来も 過去も何もかも<br><span class='sub-lyric'>보쿠노 미라이모 카코모 나니모카모<br>내 미래 과거 뭐든</span>", isChant: false },
+      { time: 34.6, text: "あなたで満ちれば 後悔は無いよ<br><span class='sub-lyric'>아나타데 미치레바 코카이와 나이요<br>너로 꽉 찬다면 후회는 없어</span>", isChant: false },
+
+      { time: 38.3, text: "生きてる証刻むの 悴む心震わして<br><span class='sub-lyric'>이키테루 아카시 키자무노 카지카무 코코로 후루와시테<br>살아있다는 증거를 새겨 위축된 마음을 흔들고</span>", isChant: false },
+      { time: 44.5, text: "天秤なんて (oh) 必要ないの 矛盾に脳を惑わして<br><span class='sub-lyric'>텐빈난테 (oh) 히츠요나이노 무쥰니 노오 마도와시테<br>천칭 같은 건 필요 없어 모순적으로 뇌를 유혹하고</span>", isChant: false },
+
+      { time: 50.8, text: "正義と悪など 揺らいでしまう程<br><span class='sub-lyric'>세이기토 아쿠나도 유라이데 시마우호도<br>정의와 악이 흔들려버릴 정도로</span>", isChant: false },
+      { time: 53.6, text: "生き急いでいた エンドロールは<br><span class='sub-lyric'>이키이소이데이타 엔도로루와<br>급한 페이스의 삶의 엔드롤은</span>", isChant: false },
+      { time: 56.7, text: "きっと神様の 身勝手な悪戯<br><span class='sub-lyric'>킷토 카미사마노 미갓테나 이타즈라<br>분명 신의 제멋대로인 장난</span>", isChant: false },
+      { time: 59.8, text: "汚れ役だろうと 厭わないよ<br><span class
+http://googleusercontent.com/youtube_content/1
