@@ -156,7 +156,7 @@
       display: block;
     }
 
-    /* 컨트롤러 (검색 & 2분할 정렬 버튼) */
+    /* 컨트롤러 (검색 & 정렬) */
     .controls-wrapper {
       width: 100%;
       max-width: 600px;
@@ -182,7 +182,6 @@
       border-color: var(--accent-color);
     }
 
-    /* 2개 버튼 균등 배치 */
     .sort-container {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -218,7 +217,7 @@
       font-weight: 700;
     }
 
-    /* 곡 카드 */
+    /* 곡 카드 리스트 */
     .song-grid {
       width: 100%;
       max-width: 600px;
@@ -233,19 +232,12 @@
       justify-content: space-between;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-left: 4px solid #444455;
       border-radius: 12px;
-      padding: 15px 18px;
+      padding: 14px 18px;
       text-decoration: none;
       color: inherit;
       transition: all 0.2s ease;
     }
-
-    .song-card.album-tokyo { border-left-color: #a46d49; }    /* 1집 Tokyo Rendez-Vous */
-    .song-card.album-sympa { border-left-color: #e2614b; }    /* 2집 Sympa */
-    .song-card.album-ceremony { border-left-color: #ffd000; } /* 3집 CEREMONY */
-    .song-card.album-greatest { border-left-color: #70a1c2; } /* 4집 THE GREATEST UNKNOWN */
-    .song-card.album-single { border-left-color: #636e72; }   /* 싱글/기타 */
 
     .song-card:hover {
       background-color: var(--card-hover);
@@ -256,17 +248,51 @@
     .song-info {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      align-items: flex-start;
+      gap: 6px;
     }
 
     .song-title {
       font-size: 1.05rem;
       font-weight: 700;
+      letter-spacing: -0.2px;
     }
 
-    .song-album {
-      font-size: 0.8rem;
-      color: var(--text-sub);
+    /* 앨범 텍스트 뱃지 (Pill Badge) */
+    .album-badge {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 6px;
+      letter-spacing: -0.2px;
+      white-space: nowrap;
+    }
+
+    /* 앨범별 톤다운된 반투명 컬러 팔레트 */
+    .album-badge.album-tokyo {
+      color: #d6b8a2;
+      background-color: rgba(164, 109, 73, 0.15);
+      border: 1px solid rgba(164, 109, 73, 0.3);
+    }
+    .album-badge.album-sympa {
+      color: #fca597;
+      background-color: rgba(226, 97, 75, 0.15);
+      border: 1px solid rgba(226, 97, 75, 0.3);
+    }
+    .album-badge.album-ceremony {
+      color: #ffeaa7;
+      background-color: rgba(255, 208, 0, 0.12);
+      border: 1px solid rgba(255, 208, 0, 0.28);
+    }
+    .album-badge.album-greatest {
+      color: #b2bec3;
+      background-color: rgba(112, 161, 194, 0.15);
+      border: 1px solid rgba(112, 161, 194, 0.3);
+    }
+    .album-badge.album-single {
+      color: #a4b0be;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .card-right {
@@ -320,6 +346,7 @@
     <p>킹누 라이브 떼창 가이드</p>
   </header>
 
+  <!-- STATION 아코디언 배너 -->
   <div class="station-accordion">
     <button class="station-toggle-btn" id="stationToggle">
       <div class="station-title">
@@ -498,13 +525,14 @@
       filtered.forEach(song => {
         const card = document.createElement("a");
         card.href = song.url;
-        card.className = `song-card ${getAlbumClass(song.album)}`;
+        card.className = "song-card";
         const badgeHtml = song.badge ? `<span class="badge-chant">${song.badge}</span>` : "";
+        const albumText = song.album ? song.album : "Single";
 
         card.innerHTML = `
           <div class="song-info">
             <div class="song-title">${song.title}</div>
-            <div class="song-album">${song.album}</div>
+            <span class="album-badge ${getAlbumClass(song.album)}">${albumText}</span>
           </div>
           <div class="card-right">
             ${badgeHtml}
