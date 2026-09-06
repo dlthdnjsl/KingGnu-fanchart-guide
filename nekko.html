@@ -6,12 +6,12 @@
   <title>King Gnu - ねっこ (떼창 가이드)</title>
   <style>
     :root {
-      --bg-color: #0f0f12;
-      --card-bg: #18181c;
-      --text-muted: #777785;
+      --bg-color: #0d0d10; /* 아주 미세하게 더 깊은 블랙으로 조정 */
+      --card-bg: #16161a;
+      --text-muted: #6b6b78; /* 비활성 텍스트를 약간 더 어둡게 하여 대비 강화 */
       --text-active: #ffffff;
       --chant-color: #ff4757;
-      --border-color: #2a2a35;
+      --border-color: #242430;
     }
 
     * {
@@ -23,9 +23,13 @@
     body {
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-color);
+      /* 1. 은은한 콘서트장 조명 느낌의 방사형 그라디언트 배경 추가 */
+      background-image: radial-gradient(circle at 50% -10%, #2a1013 0%, var(--bg-color) 60%);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       color: #fff;
       margin: 0;
-      padding: 16px;
+      padding: 24px 16px; /* 상단 여백 약간 추가 */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -38,7 +42,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 20px; /* 타이틀 여백 조금 더 확보 */
     }
 
     .back-btn {
@@ -49,10 +53,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      background-color: var(--card-bg);
+      width: 40px; /* 터치 영역 소폭 확대 */
+      height: 40px;
+      border-radius: 12px;
+      background-color: rgba(22, 22, 26, 0.8);
+      backdrop-filter: blur(8px); /* 뒤로가기 버튼 글래스모피즘 효과 */
       border: 1px solid var(--border-color);
       transition: all 0.2s ease;
     }
@@ -64,9 +69,10 @@
     }
 
     .page-title {
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-weight: 800; /* 타이틀 약간 더 두껍게 */
       letter-spacing: -0.3px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5); /* 텍스트 가독성용 그림자 */
     }
 
     .main-container {
@@ -74,11 +80,11 @@
       max-width: 560px;
       background-color: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 16px;
+      border-radius: 18px; /* 곡률 살짝 더 부드럽게 */
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4); /* 입체감 강화 */
     }
 
     .player-wrapper {
@@ -87,6 +93,9 @@
       max-height: 220px;
       background-color: #000;
       border-bottom: 1px solid var(--border-color);
+      /* 2. 플레이어와 가사창 분리감을 주는 내부 그림자 */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      z-index: 10; 
     }
 
     #player {
@@ -97,32 +106,34 @@
     .lyrics-wrapper {
       width: 100%;
       height: 52vh;
-      min-height: 280px;
-      padding: 24px 16px;
+      min-height: 300px;
+      padding: 32px 16px; /* 위아래 패딩 늘려서 페이드 공간 더 부드럽게 확보 */
       box-sizing: border-box;
       overflow-y: auto;
+      position: relative;
       
+      /* 마스크 범위 살짝 조정하여 텍스트가 더 부드럽게 사라짐 */
       -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        black 8%,
-        black 92%,
+        black 12%,
+        black 88%,
         transparent 100%
       );
       mask-image: linear-gradient(
         to bottom,
         transparent 0%,
-        black 8%,
-        black 92%,
+        black 12%,
+        black 88%,
         transparent 100%
       );
 
       scrollbar-width: thin;
-      scrollbar-color: #2e2e3a transparent;
+      scrollbar-color: #383848 transparent; /* 스크롤바 약간 더 밝게 하여 시인성 확보 */
     }
 
     .lyrics-wrapper::-webkit-scrollbar {
-      width: 4px;
+      width: 5px;
     }
 
     .lyrics-wrapper::-webkit-scrollbar-track {
@@ -130,64 +141,75 @@
     }
 
     .lyrics-wrapper::-webkit-scrollbar-thumb {
-      background-color: #2e2e3a;
+      background-color: #383848;
       border-radius: 4px;
     }
 
     .lyric-line {
-      padding: 12px 14px;
+      padding: 14px 16px; /* 패딩 살짝 늘려서 여유 확보 */
       margin: 6px 0;
-      border-radius: 12px;
+      border-radius: 14px;
       font-size: 0.95rem;
-      line-height: 1.45;
+      line-height: 1.5;
       color: var(--text-muted);
-      transition: all 0.22s ease-out;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 더 쫀득한 트랜지션 곡선 */
       cursor: pointer;
+      opacity: 0.6; /* 3. 기본 가사 투명도 낮춰서 활성 가사 대비 강조 */
+    }
+
+    .lyric-line:hover {
+      opacity: 0.8;
+      background-color: rgba(255, 255, 255, 0.03);
     }
 
     .sub-lyric {
-      font-size: 0.8rem;
-      color: #7b7b8a;
+      font-size: 0.82rem;
+      color: #6b6b78;
       font-weight: 400;
       display: block;
-      margin-top: 4px;
-      transition: color 0.2s;
+      margin-top: 5px;
+      transition: color 0.3s;
     }
 
+    /* 재생 중인 가사 스타일 */
     .lyric-line.active {
+      opacity: 1; /* 활성 시 투명도 100% */
       color: var(--text-active);
       font-weight: 700;
       font-size: 1.05rem;
       background-color: rgba(255, 255, 255, 0.08);
-      transform: scale(1.01);
+      transform: scale(1.02); /* 스케일 약간 증대 */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 떠오르는 듯한 그림자 추가 */
     }
 
     .lyric-line.active .sub-lyric {
-      color: #b5b5c2;
+      color: #c0c0d0;
     }
 
-    /* 전체 줄 떼창 적용시 */
+    /* 떼창 전용 컬러 (형광 레드) */
     .lyric-line.chant,
     .lyric-line.chant .sub-lyric {
-      color: #ff6b81 !important;
+      color: #ff5263 !important;
     }
 
+    /* 재생 중인 떼창 가사 */
     .lyric-line.active.chant,
     .lyric-line.active.chant .sub-lyric {
-      color: #ff4757 !important;
-      text-shadow: 0 0 14px rgba(255, 71, 87, 0.65);
-      background-color: rgba(255, 71, 87, 0.1);
+      color: #ff3b4e !important;
+      text-shadow: 0 0 16px rgba(255, 59, 78, 0.7); /* 글로우 효과 약간 더 쨍하게 */
+      background-color: rgba(255, 59, 78, 0.12);
+      border: 1px solid rgba(255, 59, 78, 0.2); /* 테두리를 희미하게 추가해 네온사인 느낌 강조 */
     }
 
-    /* 부분 떼창 (inline-chant) 스타일 */
+    /* 문장 중간 떼창 파트 */
     .inline-chant {
-      color: #ff6b81;
-      transition: all 0.2s ease;
+      color: #ff5263;
+      transition: all 0.3s ease;
     }
 
     .lyric-line.active .inline-chant {
-      color: #ff4757;
-      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+      color: #ff3b4e;
+      text-shadow: 0 0 14px rgba(255, 59, 78, 0.7);
     }
   </style>
 </head>
@@ -274,7 +296,7 @@
       
       { time: 224.3, text: "一頻りの雨に 流されぬような<br><span class='sub-lyric'>히토시키리노 아메니 나가사레누 요오나<br>한바탕 내리는 비에도 흘러가지 않는</span>", isChant: false },
       { time: 230.0, text: "ふとした悲しみを そっと忘れさせるような<br><span class='sub-lyric'>후토시타 카나시미오 솟토 와스레사세루 요오나<br>사소한 슬픔을 살며시 잊게 해주는</span>", isChant: false },
-      { time: 234.2, text: "そんな花でいい<br><span class='sub-lyric'>손나 하나데 이이<br>그런 꽃이면 돼</span>", isChant: false }
+      { time: 234.2, text: "そんな花でいい<br><span class='sub-lyric'>손나 하나데 이이<br>그런 꽃이면 돼</span>", isChant: false }  
     ];
 
     let player;
