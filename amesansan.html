@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - 雨燦々 (떼창 가이드)</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* 상단 헤더 & 뒤로가기 버튼 */
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    /* 플레이어와 가사를 묶는 메인 컨테이너 */
+    .main-container {
+      width: 100%;
+      max-width: 560px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    /* 유튜브 플레이어 영역 */
+    .player-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      background-color: #000;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 가사 영역 (상하 페이드아웃 효과 + 커스텀 스크롤) */
+    .lyrics-wrapper {
+      width: 100%;
+      height: 52vh;
+      min-height: 280px;
+      padding: 24px 16px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+
+      scrollbar-width: thin;
+      scrollbar-color: #2e2e3a transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-thumb {
+      background-color: #2e2e3a;
+      border-radius: 4px;
+    }
+
+    .lyric-line {
+      padding: 12px 14px;
+      margin: 6px 0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+      transition: all 0.22s ease-out;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #7b7b8a;
+      font-weight: 400;
+      display: block;
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+
+    /* 1. 일반 가사 재생 중 강조 (입체적인 Pill 형태) */
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+      transform: scale(1.01);
+    }
+
+    .lyric-line.active .sub-lyric {
+      color: #b5b5c2;
+    }
+
+    /* 2. 떼창 가사 스타일 (본 곡은 떼창 지정이 없지만 템플릿 호환용) */
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 14px rgba(255, 71, 87, 0.65);
+      background-color: rgba(255, 71, 87, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 네비게이션 바 -->
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">雨燦々</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <div class="main-container">
+    <div class="player-wrapper">
+      <div id="player"></div>
+    </div>
+
+    <div class="lyrics-wrapper" id="lyricsContainer"></div>
+  </div>
+
+  <script>
+    const YOUTUBE_VIDEO_ID = 'C47K1TX9PAA'; 
+
+    const lyricsData = [
+      { time: 8.7, text: "選べよ 変わりゆく時代を<br><span class='sub-lyric'>에라베요 카와리유쿠 지다이오<br>변해가는 시대를 선택해</span>", isChant: false },
+      { time: 14.8, text: "割り切れなくとも この瞬間この舞台を<br><span class='sub-lyric'>와리키레나쿠토모 코노 토키 코노 부타이오<br>석연치 않아도 이 순간 이 무대를</span>", isChant: false },
+      { time: 22.8, text: "生き抜くから 手答えの無い 今日でさえも<br><span class='sub-lyric'>이키누쿠카라 테고타에노 나이 쿄오데사에모<br>보람이 없는 오늘마저도 꿋꿋이 살아갈 테니까</span>", isChant: false },
+      
+      { time: 28.5, text: "紡ぐよ でこぼこな此の道に<br><span class='sub-lyric'>츠무구요 데코보코나 코노미치니<br>엮을게 울퉁불퉁한 이 길에</span>", isChant: false },
+      { time: 34.5, text: "降り注ぐ雨燦々と 悩ましく生き惑う僕らの<br><span class='sub-lyric'>후리소소구 아메산산토 나야마시쿠 이키마도우 보쿠라노<br>쏟아지는 눈부신 비 괴롭게 살아가는 우리들의</span>", isChant: false },
+      { time: 41.5, text: "悲しみさえも 水に流してゆく<br><span class='sub-lyric'>카나시미 사에모 미즈니 나가시테 유쿠<br>슬픔마저도 잊어버려가</span>", isChant: false },
+      
+      { time: 48.2, text: "錆びついた自転車を走らせて 君へと向かうのさ<br><span class='sub-lyric'>사비츠이타 지텐샤오 하시라세테 키미에토 무카우노사<br>녹슨 자전거를 타고 너에게 갈 거야</span>", isChant: false },
+      { time: 54.8, text: "雨に濡れながら帰ろう<br><span class='sub-lyric'>아메니 누레나가라 카에로<br>비에 젖으며 돌아가자</span>", isChant: false },
+      
+      { time: 69.8, text: "臨時ニュースの報せでは<br><span class='sub-lyric'>린지뉴스노 시라세데와<br>임시 뉴스의 속보에는</span>", isChant: false },
+      { time: 74.5, text: "どうやらこれから土砂降りの雨が降るらしい<br><span class='sub-lyric'>도오야라 코레카라 도샤부리노 아메가 후루라시이<br>지금부터 폭우가 쏟아진다고 해</span>", isChant: false },
+      { time: 80.5, text: "傘を忘れた溜め息は<br><span class='sub-lyric'>카사오 와스레타 타메이키와<br>우산 챙기는 걸 잊은 한숨은</span>", isChant: false },
+      { time: 84.5, text: "夕立ちが連れてきた夏の匂いに解けてゆく<br><span class='sub-lyric'>유우다치가 츠레테키타 나츠노 니오이니 토케테유쿠<br>소나기와 함께 온 여름의 향기에 녹아가</span>", isChant: false },
+      { time: 90.8, text: "過去を謳う悲しみ達が 雲となり雨を打ちつける<br><span class='sub-lyric'>카코오 우타우 카나시미타치가 쿠모토나리 아메오 우치츠케루<br>과거를 노래하는 슬픔들이 구름이 되어 비를 내리게 해</span>", isChant: false },
+      
+      { time: 99.2, text: "叫べよ 気の晴れるまで<br><span class='sub-lyric'>사케베요 키노하레루마데<br>소리를 질러봐 날이 갤 때까지</span>", isChant: false },
+      { time: 104.5, text: "声は雨に掻き消され 今じゃ何処の 誰にも届かなくても<br><span class='sub-lyric'>코에와 아메니 카키케사레 이마쟈 도코노 다레니모 토도카나쿠테모<br>목소리는 빗소리에 사라져 지금은 어디에도 닿지 않지만</span>", isChant: false },
+      { time: 114.2, text: "手遅れになってしまった 未来へさえも<br><span class='sub-lyric'>테오쿠레니 낫테 시맛타 미라이에사에모<br>이미 늦어버린 미래마저도</span>", isChant: false },
+      
+      { time: 119.8, text: "繋ぐよ そのバトンを<br><span class='sub-lyric'>츠나구요 소노 바톤오<br>그 바톤을 이을게</span>", isChant: false },
+      { time: 125.8, text: "静かに待ってる人がいる 雨燦々と悩ましく<br><span class='sub-lyric'>시즈카니 맛테루 히토가 이루 아메산산토 나야마시쿠<br>조용히 기다리고 있는 사람이 있어 눈부신 비가 괴롭게</span>", isChant: false },
+      { time: 133.5, text: "生き惑う僕らの 悲しみさえも水に流してゆく<br><span class='sub-lyric'>이키마도우 보쿠라노 카나시미사에모 미즈니 나가시테 유쿠<br>살아가는 우리들의 슬픔마저도 잊어버려가</span>", isChant: false },
+      
+      { time: 140.2, text: "線路沿い風を切り 一直線に君へと向かうのさ<br><span class='sub-lyric'>센로조이 카제오 키리 잇쵸쿠센니 키미에토 무카우노사<br>기찻길 옆 바람을 베어서 일직선으로 너에게 향할게</span>", isChant: false },
+      { time: 146.5, text: "雨に濡れながら帰ろう<br><span class='sub-lyric'>아메니 누레나가라 카에로<br>비에 젖으며 돌아가자</span>", isChant: false },
+      
+      { time: 156.8, text: "雨燦々と降り注ぎ<br><span class='sub-lyric'>아메산산토 후리소소기<br>눈부신 비가 쏟아져</span>", isChant: false },
+      { time: 161.8, text: "夏を弾いて反射した 僕らを映し出す<br><span class='sub-lyric'>나츠오 하지이테 한샤시타 보쿠라오 우츠시다스<br>여름을 튕겨내 반사된 우리들을 비춰줘</span>", isChant: false },
+      { time: 176.5, text: "雨燦々と降り注ぎ<br><span class='sub-lyric'>아메산산토 후리소소기<br>눈부신 비가 쏟아져</span>", isChant: false },
+      { time: 181.8, text: "夏を泳いでずぶ濡れの 僕らを映し出す<br><span class='sub-lyric'>나츠오 오요이데 즈부누레노 보쿠라오 우츠시다스<br>여름을 헤엄쳐서 잔뜩 젖어버린 우리들을 비춰줘</span>", isChant: false },
+      
+      { time: 196.2, text: "烈しく照りつける太陽よ 僕らを導いておくれよ<br><span class='sub-lyric'>하게시쿠 테리츠케루 타이요요 보쿠라오 미치비이테 오쿠레요<br>격하게 내리쬐는 태양이여 우리들을 이끌어줘</span>", isChant: false },
+      { time: 206.8, text: "未来を謳う言葉だけが 風となり森を吹き抜ける<br><span class='sub-lyric'>미라이오 우타우 코토바다케가 카제토나리 모리오 후키누케루<br>미래를 향하는 말들만이 바람이 되어 숲을 지나가</span>", isChant: false },
+      
+      { time: 221.5, text: "選べよ 変わりゆく時代を<br><span class='sub-lyric'>에라베요 카와리유쿠 지다이오<br>변해가는 시대를 선택해</span>", isChant: false },
+      { time: 227.8, text: "割り切れなくとも この瞬間この舞台を<br><span class='sub-lyric'>와리키레나쿠토모 코노 토키 코노 부타이오<br>석연치 않아도 이 순간 이 무대를</span>", isChant: false },
+      { time: 235.5, text: "生き抜くから 青き春の瞬きから 何度醒めようとも<br><span class='sub-lyric'>이키누쿠카라 아오키 하루노 마타타키카라 난도 사메요토모<br>살아갈 테니까 푸른 봄의 반짝임에서 몇 번이고 깨어난다도 해도</span>", isChant: false },
+      
+      { time: 241.8, text: "紡ぐよ でこぼこな此の道に<br><span class='sub-lyric'>츠무구요 데코보코나 코노미치니<br>엮을게 울퉁불퉁한 이 길에</span>", isChant: false },
+      { time: 247.8, text: "降り注ぐ雨燦々と 悩ましく生き惑う僕らの<br><span class='sub-lyric'>후리소소구 아메산산토 나야마시쿠 이키마도우 보쿠라노<br>쏟아지는 눈부신 비 괴롭게 살아가는 우리들의</span>", isChant: false },
+      { time: 254.5, text: "悲しみさえも 水に流してゆく<br><span class='sub-lyric'>카나시미 사에모 미즈니 나가시테 유쿠<br>슬픔마저도 잊어버려가</span>", isChant: false },
+      
+      { time: 261.2, text: "錆びついた自転車を走らせて 君へと向かうのさ<br><span class='sub-lyric'>사비츠이타 지텐샤오 하시라세테 키미에토 무카우노사<br>녹슨 자전거를 타고 너에게 갈 거야</span>", isChant: false },
+      { time: 267.8, text: "雨に濡れながら帰ろう<br><span class='sub-lyric'>아메니 누레나가라 카에로<br>비에 젖으며 돌아가자</span>", isChant: false }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
