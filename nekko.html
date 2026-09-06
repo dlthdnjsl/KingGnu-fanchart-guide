@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - ねっこ (떼창 가이드)</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 560px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .player-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      background-color: #000;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    .lyrics-wrapper {
+      width: 100%;
+      height: 52vh;
+      min-height: 280px;
+      padding: 24px 16px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+
+      scrollbar-width: thin;
+      scrollbar-color: #2e2e3a transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-thumb {
+      background-color: #2e2e3a;
+      border-radius: 4px;
+    }
+
+    .lyric-line {
+      padding: 12px 14px;
+      margin: 6px 0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+      transition: all 0.22s ease-out;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #7b7b8a;
+      font-weight: 400;
+      display: block;
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+      transform: scale(1.01);
+    }
+
+    .lyric-line.active .sub-lyric {
+      color: #b5b5c2;
+    }
+
+    /* 전체 줄 떼창 적용시 */
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 14px rgba(255, 71, 87, 0.65);
+      background-color: rgba(255, 71, 87, 0.1);
+    }
+
+    /* 부분 떼창 (inline-chant) 스타일 */
+    .inline-chant {
+      color: #ff6b81;
+      transition: all 0.2s ease;
+    }
+
+    .lyric-line.active .inline-chant {
+      color: #ff4757;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">ねっこ (넷코)</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <div class="main-container">
+    <div class="player-wrapper">
+      <div id="player"></div>
+    </div>
+
+    <div class="lyrics-wrapper" id="lyricsContainer"></div>
+  </div>
+
+  <script>
+    const YOUTUBE_VIDEO_ID = 'jz8O2t2r8Gs'; 
+
+    const lyricsData = [
+      { time: 1.0, text: "ささやかな花でいい<br><span class='sub-lyric'>사사야카나 하나데 이이<br>작은 꽃이면 돼</span>", isChant: false },
+      { time: 4.8, text: "大袈裟でなくていい<br><span class='sub-lyric'>오오게사데 나쿠테 이이<br>거창할 필요 없어</span>", isChant: false },
+      { time: 8.5, text: "ただあなたにとって 価値があればいい<br><span class='sub-lyric'>타다 아나타니 톳테 카치가 아레바 이이<br>그저 당신에게 있어서 가치가 있다면 돼</span>", isChant: false },
+      
+      { time: 15.5, text: "誰も気づかない<br><span class='sub-lyric'>다레모 키즈카나이<br>그 누구도 알아채지 못하는</span>", isChant: false },
+      { time: 19.3, text: "有り触れた一輪でいい<br><span class='sub-lyric'>아리후레타 이치린데 이이<br>어디에나 피어 있는 한 송이면 돼</span>", isChant: false },
+      { time: 23.3, text: "あなたが項垂れた その先に根を張る<br><span class='sub-lyric'>아나타가 우나다레타 소노 사키니 네오 하루<br>당신이 고개를 떨군 그 발밑에 뿌리를 내릴게</span>", isChant: false },
+      { time: 27.5, text: "そんな花でいい<br><span class='sub-lyric'>손나 하나데 이이<br>그런 꽃이면 돼</span>", isChant: false },
+      
+      { time: 35.8, text: "ただ黙々とねっこ伸ばして<br><span class='sub-lyric'>타다 모쿠모쿠토 넷코 노바시테<br>그저 묵묵히 뿌리를 뻗으며</span>", isChant: false },
+      { time: 40.8, text: "あなたに見つかるのを待つの<br><span class='sub-lyric'>아나타니 미츠카루노오 마츠노<br>당신이 찾아주길 기다리고 있어</span>", isChant: false },
+      { time: 44.8, text: "時の歩幅が大き過ぎるから<br><span class='sub-lyric'>토키노 호하바가 오오키스기루카라<br>시간의 보폭이 너무도 커서</span>", isChant: false },
+      { time: 50.0, text: "今日も倦んざりする程に<br><span class='sub-lyric'>쿄오모 운자리스루 호도니<br>오늘도 진절머리가 날 정도로</span>", isChant: false },
+      { time: 53.5, text: "此の身の丈を知るの<br><span class='sub-lyric'>코노 미노 타케오 시루노<br>이 몸의 크기를 알게 돼</span>", isChant: false },
+      
+      { time: 58.5, text: "望まぬとも 時計の針は進み続ける<br><span class='sub-lyric'>노조마누토모 토케이노 하리와 스스미 츠즈케루<br>원하지 않아도 시곗바늘은 계속 움직여</span>", isChant: false },
+      { time: 64.0, text: "求める程遠ざかる 大事な者こそ<br><span class='sub-lyric'>모토메루 호도 토오자카루 다이지나 모노코소<br>원하게 될 수록 멀어지는 소중한 것이야말로</span>", isChant: false },
+      { time: 69.5, text: "時の風が攫ってゆく<br><span class='sub-lyric'>토키노 카제가 사랏테유쿠<br>시간의 바람이 앗아가</span>", isChant: false },
+      { time: 73.0, text: "思い出の瓦礫に根を張ってる<br><span class='sub-lyric'>오모이데노 가레키니 네오 핫테루<br>추억의 잔해 속에서 뿌리를 내리고 있어</span>", isChant: false },
+      { time: 76.5, text: "此処で何時迄も待っている<br><span class='sub-lyric'>코코데 이츠마데모 맛테이루<br>여기서 언제까지고 기다리고 있어</span>", isChant: false },
+      { time: 80.0, text: "今日もあなたを想っている<br><span class='sub-lyric'>쿄오모 아나타오 오못테이루<br>오늘도 당신을 생각하고 있어</span>", isChant: false },
+      
+      { time: 88.0, text: "飾らない花でいい<br><span class='sub-lyric'>카자라나이 하나데 이이<br>꾸며지지 않은 꽃이면 돼</span>", isChant: false },
+      { time: 91.8, text: "華やかでなくていい<br><span class='sub-lyric'>하나야카데 나쿠테 이이<br>화려하지 않아도 돼</span>", isChant: false },
+      { time: 95.8, text: "あなたの痛みの上に 根を張れればいい<br><span class='sub-lyric'>아나타노 이타미노 우에니 네오 하레레바 이이<br>당신이 가진 상처 위에 뿌리를 내릴 수 있으면 돼</span>", isChant: false },
+      
+      { time: 102.8, text: "一頻りの雨に 流されぬような<br><span class='sub-lyric'>히토시키리노 아메니 나가사레누 요오나<br>한바탕 내리는 비에도 흘러가지 않는</span>", isChant: false },
+      { time: 110.0, text: "ふとした悲しみを そっと忘れさせるような<br><span class='sub-lyric'>후토시타 카나시미오 솟토 와스레사세루 요오나<br>사소한 슬픔을 살며시 잊게 해주는</span>", isChant: false },
+      { time: 114.5, text: "そんな花でいい<br><span class='sub-lyric'>손나 하나데 이이<br>그런 꽃이면 돼</span>", isChant: false },
+      { time: 122.0, text: "そんな花がいい<br><span class='sub-lyric'>손나 하나가 이이<br>그런 꽃이 되고 싶어</span>", isChant: false },
+      
+      // 떼창 파트 1 (전체 적용)
+      { time: 125.8, text: "ただ君が泣くなら僕も泣くから<br><span class='sub-lyric'>타다 키미가 나쿠나라 보쿠모 나쿠카라<br>그저 당신이 운다면 나도 울 테니까</span>", isChant: true },
+      { time: 131.0, text: "その美しく強く伸びた根は<br><span class='sub-lyric'>소노 우츠쿠시쿠 츠요쿠 노비타 네와<br>아름답고 강하게 뻗어있는 뿌리는</span>", isChant: true },
+      { time: 136.5, text: "誰にも見えやしないけれど<br><span class='sub-lyric'>다레니모 미에야시나이케레도<br>누구에게도 보이지 않지만</span>", isChant: true },
+      { time: 141.0, text: "無常の上に咲き誇れ<br><span class='sub-lyric'>무죠노 우에니 사키호코레<br>덧없는 세상 속에서 찬란하게 피어나</span>", isChant: true },
+      
+      // 떼창 파트 2 (부분 적용: 無常の上に 까지만)
+      { time: 145.8, text: "<span class='inline-chant'>ただ君が泣くなら僕も泣くから</span><br><span class='sub-lyric'><span class='inline-chant'>타다 키미가 나쿠나라 보쿠모 나쿠카라</span><br><span class='inline-chant'>그저 당신이 운다면 나도 울 테니까</span></span>", isChant: false },
+      { time: 151.0, text: "<span class='inline-chant'>心ふたつ悲しみひとつで</span><br><span class='sub-lyric'><span class='inline-chant'>코코로 후타츠 카나시미 히토츠데</span><br><span class='inline-chant'>두 개의 마음 하나의 슬픔으로</span></span>", isChant: false },
+      { time: 156.0, text: "<span class='inline-chant'>何十年先も咲き続ける花</span><br><span class='sub-lyric'><span class='inline-chant'>난쥬넨 사키모 사키츠즈케루 하나</span><br><span class='inline-chant'>몇십 년 뒤에도 계속 피어날 꽃</span></span>", isChant: false },
+      { time: 161.0, text: "<span class='inline-chant'>無常の上に</span> さあ咲き誇れ<br><span class='sub-lyric'><span class='inline-chant'>무죠노 우에니</span> 사아 사키호코레<br><span class='inline-chant'>덧없는 세상에도</span> 자 피어봐</span>", isChant: false },
+      
+      { time: 168.0, text: "ささやかな花でいい<br><span class='sub-lyric'>사사야카나 하나데 이이<br>작은 꽃이면 돼</span>", isChant: false },
+      { time: 171.8, text: "大袈裟でなくていい<br><span class='sub-lyric'>오오게사데 나쿠테 이이<br>거창할 필요 없어</span>", isChant: false },
+      { time: 175.5, text: "ただあなたと 幾度もの嵐を迎えようと<br><span class='sub-lyric'>타다 아나타토 이쿠도모노 아라시오 무카에요오토<br>당신과 몇 번의 폭풍을 맞더라도</span>", isChant: false },
+      { time: 182.5, text: "決して折れはしない<br><span class='sub-lyric'>케시테 오레와 시나이<br>절대 꺾이지 않아</span>", isChant: false },
+      { time: 186.5, text: "そんな花がいい<br><span class='sub-lyric'>손나 하나가 이이<br>그런 꽃이면 돼</span>", isChant: false },
+      
+      { time: 191.0, text: "ささやかな花でいい<br><span class='sub-lyric'>사사야카나 하나데 이이<br>작은 꽃이면 돼</span>", isChant: false },
+      { time: 195.0, text: "大袈裟でなくていい<br><span class='sub-lyric'>오오게사데 나쿠테 이이<br>거창할 필요 없어</span>", isChant: false },
+      { time: 198.8, text: "ただあなたにとって 価値があればいい<br><span class='sub-lyric'>타다 아나타니 톳테 카치가 아레바 이이<br>그저 당신에게 있어서 가치가 있다면 돼</span>", isChant: false },
+      
+      { time: 205.8, text: "誰も気づかない<br><span class='sub-lyric'>다레모 키즈카나이<br>아무도 알아채지 못하는</span>", isChant: false },
+      { time: 209.8, text: "有り触れた一輪でいい<br><span class='sub-lyric'>아리후레타 이치린데 이이<br>어디에나 있는 한 송이면 돼</span>", isChant: false },
+      { time: 213.8, text: "あなたが項垂れた その先に根を張る<br><span class='sub-lyric'>아나타가 우나다레타 소노 사키니 네오 하루<br>당신이 고개를 떨군 그 발밑에 뿌리를 내릴게</span>", isChant: false },
+      { time: 218.0, text: "そんな花でいい<br><span class='sub-lyric'>손나 하나데 이이<br>그런 꽃이면 돼</span>", isChant: false },
+      
+      { time: 221.0, text: "飾らない花でいい<br><span class='sub-lyric'>카자라나이 하나데 이이<br>꾸며지지 않은 꽃이면 돼</span>", isChant: false },
+      { time: 224.8, text: "華やかでなくていい<br><span class='sub-lyric'>하나야카데 나쿠테 이이<br>화려하지 않아도 돼</span>", isChant: false },
+      { time: 228.8, text: "あなたの痛みの上に 根を張れればいい<br><span class='sub-lyric'>아나타노 이타미노 우에니 네오 하레레바 이이<br>당신이 가진 상처 위에 뿌리를 내릴 수 있으면 돼</span>", isChant: false },
+      
+      { time: 235.8, text: "一頻りの雨に 流されぬような<br><span class='sub-lyric'>히토시키리노 아메니 나가사레누 요오나<br>한바탕 내리는 비에도 흘러가지 않는</span>", isChant: false },
+      { time: 243.0, text: "ふとした悲しみを そっと忘れさせるような<br><span class='sub-lyric'>후토시타 카나시미오 솟토 와스레사세루 요오나<br>사소한 슬픔을 살며시 잊게 해주는</span>", isChant: false },
+      { time: 247.5, text: "そんな花でいい<br><span class='sub-lyric'>손나 하나데 이이<br>그런 꽃이면 돼</span>", isChant: false }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
