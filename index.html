@@ -44,6 +44,7 @@
       margin-bottom: 24px;
     }
 
+    /* 1. 타이틀 입체감 강화 */
     header h1 {
       font-family: 'Montserrat', 'Pretendard', sans-serif;
       font-size: clamp(1.4rem, 6vw, 2.1rem);
@@ -52,11 +53,12 @@
       margin-bottom: 6px;
       white-space: nowrap;
       text-transform: uppercase;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* 텍스트 뒤에 부드러운 그림자 */
     }
 
     header h1 span {
       color: var(--accent-color);
-      text-shadow: 0 0 16px rgba(255, 71, 87, 0.4);
+      text-shadow: 0 0 20px rgba(255, 71, 87, 0.5); /* 네온 효과 살짝 강화 */
     }
 
     header p {
@@ -74,11 +76,12 @@
       border: 1px solid var(--border-color);
       border-radius: 12px;
       overflow: hidden;
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .station-accordion:hover {
       border-color: #383848;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
     }
 
     .station-toggle-btn {
@@ -168,18 +171,20 @@
 
     .search-box input {
       width: 100%;
-      padding: 11px 16px;
+      padding: 12px 16px; /* 패딩 살짝 줘서 타이핑 영역 넓게 */
       border-radius: 10px;
       border: 1px solid var(--border-color);
       background-color: var(--card-bg);
       color: var(--text-main);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.2s ease;
+      transition: all 0.2s ease;
     }
 
+    /* 3. 검색창 포커스 시 은은한 아우터 글로우 추가 */
     .search-box input:focus {
       border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.15); 
     }
 
     .sort-container {
@@ -236,13 +241,14 @@
       padding: 14px 18px;
       text-decoration: none;
       color: inherit;
-      transition: all 0.2s ease;
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 호버 시 더 부드럽게 */
     }
 
     .song-card:hover {
       background-color: var(--card-hover);
-      border-color: var(--accent-color);
+      border-color: #383848; /* 호버 시 테두리색 부드럽게 밝아짐 */
       transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2); /* 호버 시 떠오르는 느낌 추가 */
     }
 
     .song-info {
@@ -258,41 +264,35 @@
       letter-spacing: -0.2px;
     }
 
-    /* 앨범 텍스트 뱃지 (Pill Badge) */
+    /* 2. 앨범 텍스트 뱃지 (경계선 제거 후 매끄러운 캡슐 형태로) */
     .album-badge {
       font-size: 0.72rem;
-      font-weight: 500;
-      padding: 2px 8px;
-      border-radius: 6px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 8px;
       letter-spacing: -0.2px;
       white-space: nowrap;
     }
 
-    /* 앨범별 톤다운된 반투명 컬러 팔레트 */
     .album-badge.album-tokyo {
-      color: #d6b8a2;
-      background-color: rgba(164, 109, 73, 0.15);
-      border: 1px solid rgba(164, 109, 73, 0.3);
+      color: #e2cbb9;
+      background-color: rgba(164, 109, 73, 0.25);
     }
     .album-badge.album-sympa {
-      color: #fca597;
-      background-color: rgba(226, 97, 75, 0.15);
-      border: 1px solid rgba(226, 97, 75, 0.3);
+      color: #fcb7ab;
+      background-color: rgba(226, 97, 75, 0.25);
     }
     .album-badge.album-ceremony {
-      color: #ffeaa7;
-      background-color: rgba(255, 208, 0, 0.12);
-      border: 1px solid rgba(255, 208, 0, 0.28);
+      color: #ffeba9;
+      background-color: rgba(255, 208, 0, 0.18);
     }
     .album-badge.album-greatest {
-      color: #b2bec3;
-      background-color: rgba(112, 161, 194, 0.15);
-      border: 1px solid rgba(112, 161, 194, 0.3);
+      color: #bed0d8;
+      background-color: rgba(112, 161, 194, 0.25);
     }
     .album-badge.album-single {
-      color: #a4b0be;
-      background-color: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #b5c2cd;
+      background-color: rgba(255, 255, 255, 0.1);
     }
 
     .card-right {
@@ -305,10 +305,9 @@
       font-size: 0.72rem;
       font-weight: 600;
       color: var(--accent-color);
-      background-color: rgba(255, 71, 87, 0.12);
+      background-color: rgba(255, 71, 87, 0.15); /* 뱃지 배경 살짝 진하게 */
       padding: 4px 8px;
       border-radius: 12px;
-      border: 1px solid rgba(255, 71, 87, 0.3);
       white-space: nowrap;
     }
 
@@ -321,7 +320,7 @@
 
     .song-card:hover .arrow-icon {
       color: var(--accent-color);
-      transform: translateX(3px);
+      transform: translateX(4px); /* 화살표 이동 조금 더 역동적으로 */
     }
 
     footer {
@@ -528,7 +527,6 @@
         card.className = "song-card";
         const badgeHtml = song.badge ? `<span class="badge-chant">${song.badge}</span>` : "";
         
-        // album 문자열이 비어있으면 뱃지를 렌더링하지 않음
         const albumBadgeHtml = song.album.trim() 
           ? `<span class="album-badge ${getAlbumClass(song.album)}">${song.album}</span>` 
           : "";
