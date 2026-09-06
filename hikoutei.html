@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>King Gnu - 飛行艇 (떼창 가이드)</title>
+  <style>
+    :root {
+      --bg-color: #0f0f12;
+      --card-bg: #18181c;
+      --text-muted: #777785;
+      --text-active: #ffffff;
+      --chant-color: #ff4757;
+      --border-color: #2a2a35;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: #fff;
+      margin: 0;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .back-btn {
+      color: #a0a0ab;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: var(--chant-color);
+      transform: translateX(-2px);
+    }
+
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 560px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .player-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-height: 220px;
+      background-color: #000;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    #player {
+      width: 100%;
+      height: 100%;
+    }
+
+    .lyrics-wrapper {
+      width: 100%;
+      height: 52vh;
+      min-height: 280px;
+      padding: 24px 16px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 8%,
+        black 92%,
+        transparent 100%
+      );
+
+      scrollbar-width: thin;
+      scrollbar-color: #2e2e3a transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .lyrics-wrapper::-webkit-scrollbar-thumb {
+      background-color: #2e2e3a;
+      border-radius: 4px;
+    }
+
+    .lyric-line {
+      padding: 12px 14px;
+      margin: 6px 0;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+      transition: all 0.22s ease-out;
+      cursor: pointer;
+    }
+
+    .sub-lyric {
+      font-size: 0.8rem;
+      color: #7b7b8a;
+      font-weight: 400;
+      display: block;
+      margin-top: 4px;
+      transition: color 0.2s;
+    }
+
+    .lyric-line.active {
+      color: var(--text-active);
+      font-weight: 700;
+      font-size: 1.05rem;
+      background-color: rgba(255, 255, 255, 0.08);
+      transform: scale(1.01);
+    }
+
+    .lyric-line.active .sub-lyric {
+      color: #b5b5c2;
+    }
+
+    .lyric-line.chant,
+    .lyric-line.chant .sub-lyric {
+      color: #ff6b81 !important;
+    }
+
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      color: #ff4757 !important;
+      text-shadow: 0 0 14px rgba(255, 71, 87, 0.65);
+      background-color: rgba(255, 71, 87, 0.1);
+    }
+
+    .inline-chant {
+      color: #ff6b81;
+      transition: all 0.2s ease;
+    }
+
+    .lyric-line.active .inline-chant {
+      color: #ff4757;
+      text-shadow: 0 0 12px rgba(255, 71, 87, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">←</a>
+    <div class="page-title">飛行艇 (비행정)</div>
+    <div style="width: 38px;"></div>
+  </div>
+
+  <div class="main-container">
+    <div class="player-wrapper">
+      <div id="player"></div>
+    </div>
+
+    <div class="lyrics-wrapper" id="lyricsContainer"></div>
+  </div>
+
+  <script>
+    const YOUTUBE_VIDEO_ID = 'IPzOxKW3fSA'; 
+
+    const lyricsData = [
+      { time: 1.0, text: "どんな夢を見に行こうか<br><span class='sub-lyric'>돈나 유메오 미니 이코오카<br>어떤 꿈을 꾸러 가볼까</span>", isChant: false },
+      { time: 5.8, text: "正しさばかりに恐れ戦かないで<br><span class='sub-lyric'>타다시사 바카리니 오소레 오노노카나이데<br>옳은 것만을 쫓으며 두려움에 떨지마</span>", isChant: false },
+      { time: 11.2, text: "自由自在に飛び回って<br><span class='sub-lyric'>지유지자이니 토비마왓테<br>자유자재로 날아다니며</span>", isChant: false },
+      { time: 15.0, text: "ステップ・バイ・ステップ<br><span class='sub-lyric'>스텝푸 바이 스텝푸<br>한 걸음씩</span>", isChant: false },
+      { time: 18.0, text: "ビートを刻んで<br><span class='sub-lyric'>비토오 키잔데<br>비트를 새기며</span>", isChant: false },
+      { time: 20.8, text: "果ての無いパーティーを続けようか<br><span class='sub-lyric'>하테노 나이 파티오 츠즈케요오카<br>끝이 없는 파티를 계속해볼까</span>", isChant: false },
+
+      { time: 25.8, text: "この時代に飛び乗って<br><span class='sub-lyric'>코노 지다이니 토비놋테<br>이 시대에 올라타서</span>", isChant: false },
+      { time: 29.8, text: "今夜この街を飛び立って<br><span class='sub-lyric'>콘야 코노 마치오 토비탓테<br>오늘 밤 이 거리를 날아올라</span>", isChant: false },
+      { time: 33.8, text: "大空を飛び回って<br><span class='sub-lyric'>오오조라오 토비마왓테<br>넓은 하늘을 날아다니며</span>", isChant: false },
+      { time: 36.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: false },
+
+      { time: 42.0, text: "この風に飛び乗って<br><span class='sub-lyric'>코노 카제니 토비놋테<br>이 바람에 올라타서</span>", isChant: false },
+      { time: 45.8, text: "今夜台風の目となって<br><span class='sub-lyric'>콘야 타이후노 메토 낫테<br>오늘 밤 태풍의 눈이 돼서</span>", isChant: false },
+      { time: 49.8, text: "大空を飛び回って<br><span class='sub-lyric'>오오조라오 토비마왓테<br>넓은 하늘을 날아다니며</span>", isChant: false },
+      { time: 52.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: false },
+
+      { time: 66.8, text: "代わり映えがしない日常の片隅で<br><span class='sub-lyric'>카와리바에가시나이 니치죠노 카타스미데<br>보람이 전혀 없는 일상의 한구석에서도</span>", isChant: false },
+      { time: 71.8, text: "無邪気に笑っていられたらいいよな<br><span class='sub-lyric'>무쟈키니 와랏테 이라레타라 이이요나<br>순진하게 웃을 수 있다면 좋겠어</span>", isChant: false },
+      { time: 76.8, text: "無意味な旅を続けようか<br><span class='sub-lyric'>무이미나 타비오 츠즈케요오카<br>무의미한 여행을 계속해볼까</span>", isChant: false },
+      { time: 80.5, text: "ワン・バイ・ワン<br><span class='sub-lyric'>완 바이 완<br>하나씩</span>", isChant: false },
+      { time: 83.5, text: "一歩ずつでいいさ<br><span class='sub-lyric'>잇포즈츠데 이이사<br>한 걸음씩이라도 좋아</span>", isChant: false },
+      { time: 86.2, text: "歓声も罵声も呑み込んで<br><span class='sub-lyric'>칸세이모 바세이모 노미콘데<br>함성도 비난도 전부 삼켜버려</span>", isChant: false },
+
+      { time: 91.5, text: "この時代に飛び乗って<br><span class='sub-lyric'>코노 지다이니 토비놋테<br>이 시대에 올라타서</span>", isChant: false },
+      { time: 95.5, text: "今夜愚かな杭となって<br><span class='sub-lyric'>콘야 오로카나 쿠이토낫테<br>오늘 밤 어리석은 말뚝이 되어</span>", isChant: false },
+      { time: 99.5, text: "過ちを恐れないで<br><span class='sub-lyric'>아야마치오 오소레나이데<br>실수를 두려워하지마</span>", isChant: false },
+      { time: 102.0, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: false },
+
+      { time: 107.5, text: "この風に飛び乗って<br><span class='sub-lyric'>코노 카제니 토비놋테<br>이 바람에 올라타서</span>", isChant: false },
+      { time: 111.5, text: "今夜名も無き風となって<br><span class='sub-lyric'>콘야 나모나키 카제토 낫테<br>오늘 밤 이름도 없는 바람이 되어</span>", isChant: false },
+      { time: 115.5, text: "清濁を併せ呑んで<br><span class='sub-lyric'>세이다쿠오 아와세 논데<br>선악 가리지 말고 모두 받아들여</span>", isChant: false },
+      { time: 118.0, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: false },
+
+      /* 후반부 반복 떼창 파트 */
+      { time: 133.5, text: "大雨降らせ 大地震わせ<br><span class='sub-lyric'>오오아메 후라세 다이치 후루와세<br>폭우를 내리게 하고 땅을 흔들어</span>", isChant: true },
+      { time: 137.5, text: "過去を祝え 明日を担え<br><span class='sub-lyric'>카코오 이와에 아스오 니나에<br>과거를 축복하고 내일을 짊어져</span>", isChant: true },
+      { time: 141.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: true },
+
+      { time: 149.5, text: "大雨降らせ 大地震わせ<br><span class='sub-lyric'>오오아메 후라세 다이치 후루와세<br>폭우를 내리게 하고 땅을 흔들어</span>", isChant: true },
+      { time: 153.5, text: "過去を祝え 明日を担え<br><span class='sub-lyric'>카코오 이와에 아스오 니나에<br>과거를 축복하고 내일을 짊어져</span>", isChant: true },
+      { time: 157.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: true },
+
+      { time: 165.5, text: "大雨降らせ 大地震わせ<br><span class='sub-lyric'>오오아메 후라세 다이치 후루와세<br>폭우를 내리게 하고 땅을 흔들어</span>", isChant: true },
+      { time: 169.5, text: "過去を祝え 明日を担え<br><span class='sub-lyric'>카코오 이와에 아스오 니나에<br>과거를 축복하고 내일을 짊어져</span>", isChant: true },
+      { time: 173.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: true },
+
+      { time: 181.5, text: "大雨降らせ 大地震わせ<br><span class='sub-lyric'>오오아메 후라세 다이치 후루와세<br>폭우를 내리게 하고 땅을 흔들어</span>", isChant: true },
+      { time: 185.5, text: "過去を祝え 明日を担え<br><span class='sub-lyric'>카코오 이와에 아스오 니나에<br>과거를 축복하고 내일을 짊어져</span>", isChant: true },
+      { time: 189.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: true },
+
+      /* 후반부 브릿지 및 아웃트로 */
+      { time: 198.8, text: "この時代に飛び乗って<br><span class='sub-lyric'>코노 지다이니 토비놋테<br>이 시대에 올라타서</span>", isChant: false },
+      { time: 202.8, text: "今夜この街を飛び立って<br><span class='sub-lyric'>콘야 코노 마치오 토비탓테<br>오늘 밤 이 거리를 날아올라</span>", isChant: false },
+      { time: 206.8, text: "大空を飛び回って<br><span class='sub-lyric'>오오조라오 토비마왓테<br>넓은 하늘을 날아다니며</span>", isChant: false },
+      { time: 209.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: false },
+
+      { time: 214.8, text: "この風に飛び乗って<br><span class='sub-lyric'>코노 카제니 토비놋테<br>이 바람에 올라타서</span>", isChant: false },
+      { time: 218.8, text: "今夜台風の目となって<br><span class='sub-lyric'>콘야 타이후노 메토 낫테<br>오늘 밤 태풍의 눈이 돼서</span>", isChant: false },
+      { time: 222.8, text: "大空を飛び回って<br><span class='sub-lyric'>오오조라오 토비마왓테<br>넓은 하늘을 날아다니며</span>", isChant: false },
+      { time: 225.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: false },
+
+      { time: 231.0, text: "貴女の期待に飛び乗って<br><span class='sub-lyric'>아나타노 키타이니 토비놋테<br>당신의 기대에 올라타</span>", isChant: false },
+      { time: 235.0, text: "今夜この羽根で飛びたくて<br><span class='sub-lyric'>콘야 코노 하네데 토비타쿠테<br>오늘 밤 이 날개로 날고 싶어서</span>", isChant: false },
+      { time: 239.0, text: "この大空を飛びたくて<br><span class='sub-lyric'>코노 오오조라오 토비타쿠테<br>이 넓은 하늘을 날고 싶어서</span>", isChant: false },
+      { time: 241.5, text: "命生まれ 命生まれ<br><span class='sub-lyric'>이노치 우마레 이노치 우마레<br>생명이 태어나 생명이 태어나</span>", isChant: false },
+
+      { time: 247.0, text: "この風に飛び乗って<br><span class='sub-lyric'>코노 카제니 토비놋테<br>이 바람에 올라타서</span>", isChant: false },
+      { time: 251.0, text: "今夜名も無き風となって<br><span class='sub-lyric'>콘야 나모나키 카제토 낫테<br>오늘 밤 이름도 없는 바람이 되어</span>", isChant: false },
+      { time: 255.0, text: "清濁を併せ呑んで<br><span class='sub-lyric'>세이다쿠오 아와세 논데<br>선악 가리지 말고 모두 받아들여</span>", isChant: false },
+      { time: 257.5, text: "命揺らせ 命揺らせ<br><span class='sub-lyric'>이노치 유라세 이노치 유라세<br>목숨을 흔들어 목숨을 흔들어</span>", isChant: false }
+    ];
+
+    let player;
+    let timerInterval = null;
+    let currentIndex = -1;
+
+    const container = document.getElementById('lyricsContainer');
+    lyricsData.forEach((item, index) => {
+      const div = document.createElement('div');
+      div.className = `lyric-line ${item.isChant ? 'chant' : ''}`;
+      div.innerHTML = item.text;
+      div.id = `lyric-${index}`;
+      
+      div.addEventListener('click', () => {
+        if (player && player.seekTo) {
+          player.seekTo(item.time, true);
+          player.playVideo();
+        }
+      });
+      
+      container.appendChild(div);
+    });
+
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(tag);
+
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        videoId: YOUTUBE_VIDEO_ID,
+        playerVars: { 'rel': 0, 'modestbranding': 1, 'playsinline': 1 },
+        events: { 'onStateChange': onPlayerStateChange }
+      });
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        if (!timerInterval) {
+          timerInterval = setInterval(updateLyrics, 100);
+        }
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function updateLyrics() {
+      if (!player || !player.getCurrentTime) return;
+      const currentTime = player.getCurrentTime();
+
+      let activeIndex = -1;
+      for (let i = 0; i < lyricsData.length; i++) {
+        if (currentTime >= lyricsData[i].time) {
+          activeIndex = i;
+        } else {
+          break;
+        }
+      }
+
+      if (activeIndex !== currentIndex) {
+        if (currentIndex !== -1) {
+          const prevEl = document.getElementById(`lyric-${currentIndex}`);
+          if (prevEl) prevEl.classList.remove('active');
+        }
+
+        if (activeIndex !== -1) {
+          const currentEl = document.getElementById(`lyric-${activeIndex}`);
+          if (currentEl) {
+            currentEl.classList.add('active');
+            currentEl.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+
+        currentIndex = activeIndex;
+      }
+    }
+  </script>
+</body>
+</html>
