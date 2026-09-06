@@ -456,6 +456,7 @@
       if (a.includes("sympa")) return "album-sympa";
       if (a.includes("ceremony")) return "album-ceremony";
       if (a.includes("greatest unknown")) return "album-greatest";
+      return "album-single";
     }
 
     function renderList() {
@@ -526,12 +527,16 @@
         card.href = song.url;
         card.className = "song-card";
         const badgeHtml = song.badge ? `<span class="badge-chant">${song.badge}</span>` : "";
-        const albumText = song.album ? song.album : "Single";
+        
+        // album 문자열이 비어있으면 뱃지를 렌더링하지 않음
+        const albumBadgeHtml = song.album.trim() 
+          ? `<span class="album-badge ${getAlbumClass(song.album)}">${song.album}</span>` 
+          : "";
 
         card.innerHTML = `
           <div class="song-info">
             <div class="song-title">${song.title}</div>
-            <span class="album-badge ${getAlbumClass(song.album)}">${albumText}</span>
+            ${albumBadgeHtml}
           </div>
           <div class="card-right">
             ${badgeHtml}
