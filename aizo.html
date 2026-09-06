@@ -387,9 +387,13 @@
           const currentEl = document.getElementById(`lyric-${activeIndex}`);
           if (currentEl) {
             currentEl.classList.add('active');
-            currentEl.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center'
+            
+            // 변경된 부분: scrollIntoView 대신 scrollTop을 직접 제어하여 화면 전체가 내려가는 현상 방지
+            const scrollPos = currentEl.offsetTop - (container.clientHeight / 2) + (currentEl.clientHeight / 2);
+            
+            container.scrollTo({
+              top: scrollPos,
+              behavior: 'smooth'
             });
           }
         }
