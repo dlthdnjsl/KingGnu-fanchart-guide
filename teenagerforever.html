@@ -145,62 +145,68 @@
       border-radius: 4px;
     }
 
+    /* 가사 기본 스타일: 박스 배경/테두리를 없애고 평소 텍스트를 은은하게 톤다운 */
     .lyric-line {
-      padding: 14px 16px; /* 패딩 살짝 늘려서 여유 확보 */
-      margin: 6px 0;
-      border-radius: 14px;
-      font-size: 0.95rem;
+      padding: 10px 8px;
+      margin: 10px 0;
+      font-size: 0.98rem;
       line-height: 1.5;
-      color: var(--text-muted);
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 더 쫀득한 트랜지션 곡선 */
+      color: #ffffff;
+      background: none !important;      /* 배경 박스 완전 제거 */
+      border: none !important;          /* 테두리 박스 완전 제거 */
+      box-shadow: none !important;      /* 박스 그림자 제거 */
+      opacity: 0.3;                     /* 비활성 가사는 차분하게 어둡게 */
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       cursor: pointer;
-      opacity: 0.6; /* 3. 기본 가사 투명도 낮춰서 활성 가사 대비 강조 */
     }
 
     .lyric-line:hover {
-      opacity: 0.8;
-      background-color: rgba(255, 255, 255, 0.03);
+      opacity: 0.6;
     }
 
+    /* 발음 및 한글 해석 텍스트 */
     .sub-lyric {
       font-size: 0.82rem;
-      color: #6b6b78;
+      color: #a0a0ab;
       font-weight: 400;
       display: block;
-      margin-top: 5px;
-      transition: color 0.3s;
+      margin-top: 4px;
+      transition: color 0.3s, opacity 0.3s;
     }
 
-    /* 재생 중인 가사 스타일 */
+    /* 1. 일반 가사 재생 중 (active) -> 불이 켜지듯 선명한 화이트 & 살짝 확대 */
     .lyric-line.active {
-      opacity: 1; /* 활성 시 투명도 100% */
-      color: var(--text-active);
+      opacity: 1;                       /* 100% 선명하게 켜짐 */
+      color: #ffffff;
       font-weight: 700;
-      font-size: 1.05rem;
-      background-color: rgba(255, 255, 255, 0.08);
-      transform: scale(1.02); /* 스케일 약간 증대 */
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 떠오르는 듯한 그림자 추가 */
+      font-size: 1.1rem;
+      transform: scale(1.02);
+      transform-origin: left center;
     }
 
     .lyric-line.active .sub-lyric {
-      color: #c0c0d0;
+      color: #e0e0ea;
     }
 
-    /* 떼창 전용 컬러 (형광 레드) */
+    /* 2. 떼창 가사 평소 상태 -> 톤다운된 레드 */
     .lyric-line.chant,
     .lyric-line.chant .sub-lyric {
       color: #ff5263 !important;
     }
 
-    /* 떼창 가사 재생 중 (테두리 박스를 빼고 텍스트 빛과 은은한 배경만 유지) */
-.lyric-line.active.chant,
-.lyric-line.active.chant .sub-lyric {
-  color: #ff4757 !important;
-  text-shadow: 0 0 14px rgba(255, 71, 87, 0.65);
-  background-color: rgba(255, 71, 87, 0.12); /* 은은한 붉은 배경 */
-  border: none !important; /* 내부/외부의 거슬리는 박스 테두리 완전 제거 */
-}
-    /* 문장 중간 떼창 파트 */
+    /* 3. 떼창 가사 재생 중 (active) -> 강렬한 네온 레드 발광(Glow) 효과 */
+    .lyric-line.active.chant,
+    .lyric-line.active.chant .sub-lyric {
+      opacity: 1;
+      color: #ff3b4e !important;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transform: scale(1.02);
+      transform-origin: left center;
+      text-shadow: 0 0 16px rgba(255, 59, 78, 0.85); /* 텍스트 네온 사인 효과 */
+    }
+
+    /* 문장 중간 부분 떼창 파트 */
     .inline-chant {
       color: #ff5263;
       transition: all 0.3s ease;
@@ -208,7 +214,7 @@
 
     .lyric-line.active .inline-chant {
       color: #ff3b4e;
-      text-shadow: 0 0 14px rgba(255, 59, 78, 0.7);
+      text-shadow: 0 0 14px rgba(255, 59, 78, 0.85);
     }
   </style>
 </head>
